@@ -1,0 +1,109 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #ffffff;
+  --header: #fa6413;
+  --title: #0e0e0e;
+  --text: #0e0e0e;
+  --hover: #df7b60;
+  --button: #990505;
+}
+
+.dark {
+  --bg: rgb(15, 14, 14);
+  --header: #b94705;
+  --title: #f4f4f4;
+  --text: #fcfcfc;
+  --hover: #a84007;
+  --button: #990505;
+}
+
+html,
+body {
+  font-family: "Inter", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.3s, color 0.3s;
+}
+
+a {
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--hover);
+}
+
+.site-header {
+  background-color: var(--header);
+  border-bottom: 1px solid var(--text);
+  padding: 8px 16px;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: var(--text);
+}
+
+.nav-list {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+}
+
+.nav-list a {
+  color: var(--text);
+  font-weight: bold;
+  transition: color 0.2s ease;
+}
+
+.nav-list a:hover {
+  color: var(--hover);
+}
+
+.right-side {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  background-color: var(--button);
+  color: var(--text);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.btn:hover {
+  background-color: var(--hover);
+  color: var(--text);
+}
+
+
+.theme-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--text);
+  transition: color 0.3s;
+}
