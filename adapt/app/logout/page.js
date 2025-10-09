@@ -9,7 +9,7 @@ export default function LogoutPage() {
   useEffect(() => {
     async function doLogout() {
       await Parse.User.logOut();
-      router.push("/login");
+      router.push("/");
     }
     doLogout();
   }, [router]);

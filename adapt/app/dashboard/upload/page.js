@@ -1,8 +1,8 @@
 "use client";
-
 import { useState } from "react";
 import FileUploader from "../../../components/FileUploader";
 import { uploadFile } from "../../back4app/provas/uploadFile";
+import styles from "./page.module.css";
 
 export default function UploadPage() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -10,55 +10,51 @@ export default function UploadPage() {
   const [uploadedUrl, setUploadedUrl] = useState(null);
 
   const handleUpload = async () => {
-    if (!selectedFile) {
-      alert("Selecione um arquivo primeiro!");
-      return;
-    }
+    if (!selectedFile) return;
 
-    try {
-      setUploading(true);
-      const url = await uploadFile(selectedFile);
-      setUploadedUrl(url);
-      alert("Upload concluído com sucesso!");
-    } catch (error) {
-      console.error("Erro no upload:", error);
-    } finally {
-      setUploading(false);
-    }
+    setUploading(true);
+    const url = await uploadFile(selectedFile);
+    setUploadedUrl(url);
+    setUploading(false);
   };
 
   return (
-    <div className="upload-page">
-      <h2>Envie sua prova para adaptação</h2>
+    <div className={styles["upload-container"]}>
+      <h2 className={styles["upload-title"]}>Criar Nova Prova Adaptada</h2>
 
-      <FileUploader onFileSelect={setSelectedFile} />
-
-      {selectedFile && (
-        <div className="file-info">
-          <p>Arquivo selecionado: {selectedFile.name}</p>
-          <button onClick={() => setSelectedFile(null)} className="btn danger">
-            Trocar Arquivo
-          </button>
-
-          <button
-            onClick={handleUpload}
-            className="btn upload-confirm"
-            disabled={uploading}
-          >
-            {uploading ? "Enviando..." : "Fazer Upload"}
-          </button>
+      {!selectedFile ? (
+        <FileUploader onFileSelect={setSelectedFile} />
+      ) : (
+        <div className={styles["upload-actions"]}>
+          <p>📄 {selectedFile.name}</p>
+          <div className={styles["button-group"]}>
+            <button
+              onClick={() => setSelectedFile(null)}
+              className={`${styles.btn} ${styles.danger}`}
+            >
+              Trocar
+            </button>
+            <button
+              onClick={handleUpload}
+              className={`${styles.btn} ${styles.primary}`}
+              disabled={uploading}
+            >
+              {uploading ? "Enviando..." : "Enviar"}
+            </button>
+          </div>
         </div>
       )}
 
       {uploadedUrl && (
-        <div className="file-result">
-          <p>Arquivo salvo no servidor:</p>
+        <div className={styles["upload-success"]}>
+          <p>Upload concluído!</p>
           <a
             href={uploadedUrl}
             target="_blank"
-            className="text-blue-500 underline"
+            rel="noopener noreferrer"
+            className={styles.link}
           >
-            Visualizar no Back4App
+            Ver no Back4App
           </a>
         </div>
       )}

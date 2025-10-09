@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        <main >{children}</main>
+        <main>{children}</main>
       </body>
     </html>
   );

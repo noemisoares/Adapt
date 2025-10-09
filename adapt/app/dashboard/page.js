@@ -3,6 +3,7 @@
 import Parse from "../back4app/parseConfig";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import styles from "./page.module.css";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -13,22 +14,21 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <main className="p-6 flex flex-col items-center">
+    <main className={styles.main}>
       {user ? (
         <>
-          <h1 className="text-2xl font-bold mb-4">
-            Olá, {user.get("username")} 👋
-          </h1>
-          <p>Bem-vindo ao seu painel.</p>
-          <Link href="/logout" className="mt-4 text-blue-500 underline">
-            Sair
-          </Link>
-          <div className="dashboard-actions">
-            <Link href="/dashboard/upload" className="btn upload-btn">
+          <div className={styles.header}>
+            <h1>Olá, {user.get("username")}</h1>
+            <p>Bem-vindo ao seu painel.</p>
+            <p>Você precisa estar logado.</p>
+          </div>
+
+          <div className={styles.actions}>
+            <Link href="/dashboard/upload" className={styles.uploadBtn}>
               Criar Nova Prova Adaptada
             </Link>
 
-            <Link href="/dashboard/provas" className="btn saved-btn">
+            <Link href="/dashboard/provas" className={styles.savedBtn}>
               Ver Provas Salvas
             </Link>
           </div>
