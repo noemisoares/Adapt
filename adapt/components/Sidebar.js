@@ -58,7 +58,6 @@ export default function Sidebar() {
   return (
     <aside className={styles.sidebar}>
       <div className={styles["sidebar-logo"]}>
-        <img src="/logo.svg" alt="Logo" />
         <h2>Adapt</h2>
       </div>
 
