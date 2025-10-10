@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import FileUploader from "../../../components/FileUploader";
+import FileUploader from "../../../components/FileUploader/FileUploader";
 import { uploadFile } from "../../back4app/provas/uploadFile";
 import styles from "./page.module.css";
 
@@ -11,51 +11,80 @@ export default function UploadPage() {
 
   const handleUpload = async () => {
     if (!selectedFile) return;
-
     setUploading(true);
-    const url = await uploadFile(selectedFile);
-    setUploadedUrl(url);
+
+    try {
+      const url = await uploadFile(selectedFile);
+      setUploadedUrl(url);
+    } catch (err) {
+      console.error("Erro ao enviar:", err);
+    }
+
     setUploading(false);
   };
 
-  return (
-    <div className={styles["upload-container"]}>
-      <h2 className={styles["upload-title"]}>Criar Nova Prova Adaptada</h2>
+  const handleReset = () => {
+    setSelectedFile(null);
+    setUploadedUrl(null);
+  };
 
-      {!selectedFile ? (
-        <FileUploader onFileSelect={setSelectedFile} />
+  return (
+    <div className={styles.container}>
+      {!uploadedUrl ? (
+        <>
+          <h2 className={styles.title}>Criar Nova Prova Adaptada</h2>
+          <p className={styles.subtitle}>
+            Faça upload de uma prova e personalize as adaptações
+          </p>
+          <div className={styles.uploadArea}>
+            {!selectedFile ? (
+              <FileUploader onFileSelect={setSelectedFile} />
+            ) : (
+              <div className={styles.fileInfo}>
+                <p>{selectedFile.name}</p>
+                <div className={styles.buttons}>
+                  <button onClick={handleReset} className={styles.btnCancel}>
+                    Trocar
+                  </button>
+                  <button
+                    onClick={handleUpload}
+                    className={styles.btnUpload}
+                    disabled={uploading}
+                  >
+                    {uploading ? "Enviando..." : "Enviar"}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </>
       ) : (
-        <div className={styles["upload-actions"]}>
-          <p>📄 {selectedFile.name}</p>
-          <div className={styles["button-group"]}>
-            <button
-              onClick={() => setSelectedFile(null)}
-              className={`${styles.btn} ${styles.danger}`}
+        <div className={styles.previewArea}>
+          <h2 className={styles.title}>Prova Enviada!</h2>
+          <p className={styles.subtitle}>Arquivo pronto para visualização:</p>
+
+          <div className={styles.previewBox}>
+            <iframe
+              src={uploadedUrl}
+              title="Preview da Prova"
+              className={styles.previewFrame}
+            />
+          </div>
+
+          <div className={styles.buttons}>
+            <a
+              href={uploadedUrl}
+              download
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.btnDownload}
             >
-              Trocar
-            </button>
-            <button
-              onClick={handleUpload}
-              className={`${styles.btn} ${styles.primary}`}
-              disabled={uploading}
-            >
-              {uploading ? "Enviando..." : "Enviar"}
+              Baixar Prova
+            </a>
+            <button onClick={handleReset} className={styles.btnCancel}>
+              Enviar Outra
             </button>
           </div>
-        </div>
-      )}
-
-      {uploadedUrl && (
-        <div className={styles["upload-success"]}>
-          <p>Upload concluído!</p>
-          <a
-            href={uploadedUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.link}
-          >
-            Ver no Back4App
-          </a>
         </div>
       )}
     </div>

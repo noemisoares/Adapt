@@ -1,0 +1,43 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  padding: 2rem;
+  background-color: #fafafa;
+  transition: all 0.3s ease;
+}
+
+.container:hover {
+  border-color: #ff7a00;
+  background-color: #fff8f0;
+}
+
+.uploadBtn {
+  background-color: #ff7a00;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.uploadBtn:hover {
+  background-color: #e86c00;
+}
+
+.inputHidden {
+  display: none;
+}
+
+.hintText {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #666;
+  text-align: center;
+}
