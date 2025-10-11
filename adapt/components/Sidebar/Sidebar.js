@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Parse from "../app/back4app/parseConfig";
+import Parse from "../../app/back4app/parseConfig";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
