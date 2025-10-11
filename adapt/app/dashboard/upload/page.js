@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import Parse from "../../back4app/parseConfig";
 import FileUploader from "../../../components/FileUploader/FileUploader";
 import { uploadFile } from "../../back4app/provas/uploadFile";
 import styles from "./page.module.css";
@@ -9,6 +8,7 @@ export default function UploadPage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadedUrl, setUploadedUrl] = useState(null);
+  const [downloading, setDownloading] = useState(false);
 
   const handleFileSelect = async (file) => {
     if (!file) return;
@@ -20,6 +20,7 @@ export default function UploadPage() {
       setUploadedUrl(url);
     } catch (err) {
       console.error("Erro ao enviar:", err);
+      alert("Erro ao enviar a prova.");
     }
 
     setUploading(false);
@@ -30,20 +31,35 @@ export default function UploadPage() {
     setUploadedUrl(null);
   };
 
-  const handleSaveToBack4App = async () => {
-    if (!uploadedUrl) return;
+  const handleDownload = async () => {
+    if (!uploadedUrl) {
+      alert("Nenhum arquivo disponível para download.");
+      return;
+    }
 
     try {
-      const Prova = Parse.Object.extend("Provas");
-      const prova = new Prova();
+      setDownloading(true);
 
-      prova.set("arquivoUrl", uploadedUrl);
-      prova.set("usuario", Parse.User.current());
+      const response = await fetch(uploadedUrl);
+      if (!response.ok) throw new Error("Falha ao buscar o arquivo.");
 
-      await prova.save();
-      alert("Prova salva com sucesso!");
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download =
+        selectedFile?.name || "prova_adaptada." + blob.type.split("/")[1];
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
     } catch (error) {
-      console.error("Erro ao salvar no Back4App:", error);
+      console.error("Erro ao baixar arquivo:", error);
+      alert("Não foi possível baixar a prova.");
+    } finally {
+      setDownloading(false);
     }
   };
 
@@ -76,11 +92,13 @@ export default function UploadPage() {
 
           <div className={styles.buttons}>
             <button
-              onClick={handleSaveToBack4App}
+              onClick={handleDownload}
               className={styles.btnDownload}
+              disabled={downloading}
             >
-              Baixar Prova Adaptada
+              {downloading ? "Baixando..." : "Baixar Prova Adaptada"}
             </button>
+
             <button onClick={handleReset} className={styles.btnCancel}>
               Enviar Outra
             </button>
