@@ -1,6 +1,6 @@
 "use client";
 import { useRef } from "react";
-import "./FileUploader.module.css";
+import styles from "./FileUploader.module.css";
 
 export default function FileUploader({ onFileSelect }) {
   const fileInputRef = useRef();
@@ -18,19 +18,19 @@ export default function FileUploader({ onFileSelect }) {
 
   return (
     <div
-      className="file-uploader"
+      className={styles.fileUploader}
       onDrop={handleDrop}
       onDragOver={(e) => e.preventDefault()}
     >
-      <div className="upload-content">
-        <div className="upload-icon">⬆</div>
-        <p className="upload-text">Arraste sua prova aqui</p>
-        <p className="upload-subtext">
+      <div className={styles.uploadContent}>
+        <div className={styles.uploadIcon}>⬆</div>
+        <p className={styles.uploadText}>Arraste sua prova aqui</p>
+        <p className={styles.uploadSubtext}>
           ou clique no botão abaixo para selecionar
         </p>
 
         <button
-          className="btn upload-btn"
+          className={styles.uploadBtn}
           onClick={() => fileInputRef.current.click()}
         >
           Carregar Prova
@@ -45,7 +45,7 @@ export default function FileUploader({ onFileSelect }) {
           onChange={handleFileChange}
         />
 
-        <p className="upload-info">
+        <p className={styles.uploadInfo}>
           Formatos suportados: PDF, Word, TXT, PNG, JPG (máx. 10 MB)
         </p>
       </div>

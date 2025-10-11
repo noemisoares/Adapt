@@ -4,8 +4,16 @@ export async function uploadFile(file) {
   try {
     console.log("Iniciando upload:", file.name);
 
-    const parseFile = new Parse.File(file.name, file);
+    const safeFileName = file.name
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-zA-Z0-9.\-_]/g, "_");
+
+    console.log("Nome sanitizado:", safeFileName);
+
+    const parseFile = new Parse.File(safeFileName, file);
     const savedFile = await parseFile.save();
+
     console.log("Arquivo salvo no Parse:", savedFile.url());
 
     const Prova = Parse.Object.extend("Provas");
