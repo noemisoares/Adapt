@@ -27,6 +27,7 @@ O Adapt tem potencial para se tornar:
     <th>Foto</th>
     <th>Nome</th>
     <th>GitHub</th>
+    <th>Função</th>
   </tr>
   <tr>
     <td align="center">
