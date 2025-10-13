@@ -9,17 +9,17 @@
   --header: #fa6413;
   --title: #0e0e0e;
   --text: #0e0e0e;
-  --hover: #df7b60;
-  --button: #990505;
+  --hover: #ff9249;
+  --button: #a73a00;
 }
 
 .dark {
   --bg: rgb(15, 14, 14);
-  --header: #b94705;
+  --header: #fa6413;
   --title: #f4f4f4;
   --text: #fcfcfc;
-  --hover: #a84007;
-  --button: #990505;
+  --hover: #d54b00;
+  --button: #a73a00;
 }
 
 html,
@@ -97,6 +97,7 @@ a:hover {
   background-color: var(--hover);
   color: var(--text);
 }
+
 
 .theme-button {
   background: none;
