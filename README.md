@@ -1,6 +1,6 @@
 # Adapt - Sistema de Adaptação de Provas para Neurodivergentes
 
-![Identidade Visual do Projeto ADAPT](images/logo.)
+![Identidade Visual do Projeto ADAPT](ADAPT_Laranja.png)
 
 ## Projeto Integrador – UNICAP
 Ferramenta digital desenvolvida para auxiliar professores na adaptação de avaliações para alunos neurodivergentes, com foco inicial em TDAH.
