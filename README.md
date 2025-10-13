@@ -20,6 +20,20 @@ O Adapt tem potencial para se tornar:
 - Uma plataforma independente (startup) voltada a escolas e universidades;
 - Uma ferramenta com IA aprimorada para adaptação automática de conteúdos e avaliações.
 
+## Tecnologias Utilizadas
+### Frontend
+- CSS / Styled Components
+- Figma Maker
+
+### Backend
+- React
+- Node.js
+- Back4App (Parse Server)
+
+### Outros
+- GitHub (controle de versão)
+- Jira (gestão ágil de tarefas)
+
 ## 💻 Equipe
 
 <table align="center">
