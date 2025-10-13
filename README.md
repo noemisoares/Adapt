@@ -1,4 +1,22 @@
-# Adapt
+# Adapt - Sistema de Adaptação de Provas para Neurodivergentes
+
+## Projeto Integrador – UNICAP
+Ferramenta digital desenvolvida para auxiliar professores na adaptação de avaliações para alunos neurodivergentes, com foco inicial em TDAH.
+
+## Visão Geral
+O Adapt é um sistema web que utiliza tecnologia e inteligência artificial para sugerir adaptações pedagógicas em provas e atividades acadêmicas, tornando o processo avaliativo mais inclusivo e acessível.
+O projeto está sendo desenvolvido como parte da disciplina Projeto Integrador, com o objetivo de evoluir para um protótipo funcional e, futuramente, um produto de impacto educacional.
+
+## Objetivo do Projeto
+
+- Oferecer aos professores uma ferramenta que automatize e personalize adaptações em avaliações.
+- Garantir que alunos com TDAH possam realizar provas mais claras, justas e adequadas às suas necessidades.
+
+## Futuro do Projeto
+O Adapt tem potencial para se tornar:
+- Um projeto de extensão universitária focado em inclusão educacional;
+- Uma plataforma independente (startup) voltada a escolas e universidades;
+- Uma ferramenta com IA aprimorada para adaptação automática de conteúdos e avaliações.
 
 ## 💻 Equipe
 
