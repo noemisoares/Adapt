@@ -4,6 +4,7 @@
 
 ## Projeto Integrador – UNICAP
 Ferramenta digital desenvolvida para auxiliar professores na adaptação de avaliações para alunos neurodivergentes, com foco inicial em TDAH.
+[Acesse nosso sitema web](https://adapt-seven.vercel.app/)
 
 ## Visão Geral
 O Adapt é um sistema web que utiliza tecnologia e inteligência artificial para sugerir adaptações pedagógicas em provas e atividades acadêmicas, tornando o processo avaliativo mais inclusivo e acessível.
