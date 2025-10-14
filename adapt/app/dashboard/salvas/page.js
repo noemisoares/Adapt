@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { getProvasDoUsuario } from "@/app/back4app/provas/getProvasDoUsuario"; // 👈 use @ para caminho absoluto se possível
+import { getProvasUser } from "@/app/back4app/provas/getProvasUser"; // 👈 use @ para caminho absoluto se possível
 import styles from "./page.module.css"
 
 export default function SalvasPage() {
@@ -13,7 +13,7 @@ export default function SalvasPage() {
 
     (async () => {
       try {
-        const res = await getProvasDoUsuario({ limit: 100, order: "-createdAt" });
+        const res = await getProvasUser({ limit: 100, order: "-createdAt" });
         if (mounted) setProvas(res);
       } catch (err) {
         console.error("Erro buscando provas:", err);
@@ -36,7 +36,7 @@ export default function SalvasPage() {
       <ul>
         {provas.map(p => (
           <li key={p.id}>
-            <strong>{p.titulo || `Prova ${p.id}`}</strong><br />
+            <strong>{p.titulo}</strong><br />
             Enviada em: {p.criadoEm?.toLocaleString()}<br />
             {p.arquivoUrl ? (
               <>
