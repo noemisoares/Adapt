@@ -44,7 +44,7 @@ export default function Sidebar() {
       icon: <FolderOpen size={18} />,
     },
     {
-      href: "/dashboard/boas-praticas",
+      href: "/dashboard/praticas",
       label: "Boas Práticas",
       icon: <Lightbulb size={18} />,
     },

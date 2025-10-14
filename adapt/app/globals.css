@@ -1,12 +1,5 @@
-@font-face {
-  font-family: 'AdaptFont';
-  src: url('./adapt/app/fonteCoolvetica.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
 body {
-  font-family: 'AdaptFont', sans-serif;
+  font-family: sans-serif;
 }
 
 /* RESET GLOBAL */

@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { getProvasDoUsuario } from "@/app/back4app/provas/getProvasDoUsuario"; // 👈 use @ para caminho absoluto se possível
+import styles from "./page.module.css"
 
 export default function SalvasPage() {
   const [provas, setProvas] = useState([]);
@@ -30,7 +31,7 @@ export default function SalvasPage() {
   if (!provas.length) return <div>Você ainda não possui provas salvas.</div>;
 
   return (
-    <div>
+    <div className={styles.main}>
       <h1>Provas Salvas</h1>
       <ul>
         {provas.map(p => (
