@@ -28,7 +28,7 @@ export default function Dashboard() {
               Criar Nova Prova Adaptada
             </Link>
 
-            <Link href="/dashboard/provas" className={styles.savedBtn}>
+            <Link href="/dashboard/salvas" className={styles.savedBtn}>
               Ver Provas Salvas
             </Link>
           </div>

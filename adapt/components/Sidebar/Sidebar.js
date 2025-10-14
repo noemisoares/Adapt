@@ -39,7 +39,7 @@ export default function Sidebar() {
       icon: <FilePlus size={18} />,
     },
     {
-      href: "/dashboard/provas",
+      href: "/dashboard/salvas",
       label: "Provas Salvas",
       icon: <FolderOpen size={18} />,
     },
