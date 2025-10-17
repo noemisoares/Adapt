@@ -1,0 +1,69 @@
+.container {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+  border: 1px solid #f3d9cc;
+  margin-bottom: 18px;
+}
+
+.title {
+  color: #ff7a00;
+  margin: 0 0 12px 0;
+  font-size: 1.05rem;
+}
+
+.box {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: #fff4ef;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ffd9c7;
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  background: #fff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: #ff7a00;
+}
+
+.metaName {
+  font-weight: 700;
+  color: #222;
+}
+
+.metaSize {
+  color: #777;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+.actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.btnReplace {
+  background: white;
+  border: 1px solid #ffd9c7;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btnRemove {
+  background: transparent;
+  color: #ff7a00;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+}

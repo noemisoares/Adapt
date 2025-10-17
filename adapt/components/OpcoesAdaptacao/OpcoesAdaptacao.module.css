@@ -1,0 +1,38 @@
+.container {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px;
+  border: 1px solid #f3d9cc;
+}
+
+.title {
+  color: #ff7a00;
+  margin: 0 0 12px 0;
+  font-size: 1.05rem;
+}
+
+.control {
+  margin-bottom: 12px;
+}
+
+.controlLabel {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.rangeInput {
+  width: 100%;
+}
+
+.toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f6e7df;
+}
+
+.toggleLast {
+  border-bottom: none;
+}

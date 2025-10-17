@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.3",
     "lucide-react": "^0.545.0",
     "next": "15.5.4",
     "node-fetch": "^3.3.2",
@@ -17,7 +19,8 @@
     "pdf-parse": "^2.4.3",
     "pdfkit": "^0.17.2",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "stream-buffers": "^3.0.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
