@@ -1,14 +1,34 @@
 "use client";
 import { useState } from "react";
+import Parse from "../../back4app/parseConfig";
 import FileUploader from "../../../components/FileUploader/FileUploader";
 import { uploadFile } from "../../back4app/provas/uploadFile";
 import styles from "./page.module.css";
+
+async function saveAdaptedToProva(adaptedUrl, originalProvaObjectId) {
+  const Prova = Parse.Object.extend("Provas");
+  let prova;
+
+  if (originalProvaObjectId) {
+    const query = new Parse.Query(Prova);
+    prova = await query.get(originalProvaObjectId);
+  } else {
+    prova = new Prova();
+  }
+
+  prova.set("arquivoAdaptadoUrl", adaptedUrl);
+  prova.set("usuario", Parse.User.current());
+
+  await prova.save();
+  alert("✅ Esboço salvo no Back4App!");
+}
 
 export default function UploadPage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadedUrl, setUploadedUrl] = useState(null);
   const [downloading, setDownloading] = useState(false);
+  const [provaId, setProvaId] = useState(null);
 
   const handleFileSelect = async (file) => {
     if (!file) return;
@@ -18,6 +38,14 @@ export default function UploadPage() {
     try {
       const url = await uploadFile(file);
       setUploadedUrl(url);
+
+      const Prova = Parse.Object.extend("Provas");
+      const prova = new Prova();
+      prova.set("arquivoOriginal", new Parse.File(file.name, file));
+      prova.set("usuario", Parse.User.current());
+      const result = await prova.save();
+
+      setProvaId(result.id);
     } catch (err) {
       console.error("Erro ao enviar:", err);
       alert("Erro ao enviar a prova.");
@@ -29,6 +57,7 @@ export default function UploadPage() {
   const handleReset = () => {
     setSelectedFile(null);
     setUploadedUrl(null);
+    setProvaId(null);
   };
 
   const handleDownload = async () => {
@@ -60,6 +89,20 @@ export default function UploadPage() {
       alert("Não foi possível baixar a prova.");
     } finally {
       setDownloading(false);
+    }
+  };
+
+  const handleSaveDraft = async () => {
+    if (!uploadedUrl) {
+      alert("Nenhum arquivo enviado para salvar o esboço.");
+      return;
+    }
+
+    try {
+      await saveAdaptedToProva(uploadedUrl, provaId);
+    } catch (err) {
+      console.error("Erro ao salvar esboço:", err);
+      alert("Erro ao salvar esboço no Back4App.");
     }
   };
 
@@ -97,6 +140,14 @@ export default function UploadPage() {
               disabled={downloading}
             >
               {downloading ? "Baixando..." : "Baixar Prova Adaptada"}
+            </button>
+
+            <button
+              onClick={handleSaveDraft}
+              className={styles.btnUpload}
+              disabled={!uploadedUrl}
+            >
+              Salvar Esboço
             </button>
 
             <button onClick={handleReset} className={styles.btnCancel}>
