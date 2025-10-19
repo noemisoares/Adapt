@@ -1,25 +1,35 @@
 import { NextResponse } from "next/server";
-import fetch from "node-fetch";
-import * as pdfParse from "pdf-parse";
+import OpenAI from "openai";
 import PDFDocument from "pdfkit";
 import streamBuffers from "stream-buffers";
-import Parse from "../../back4app/parseConfig";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const pdfParse = require("pdf-parse");
 
-import OpenAI from "openai";
+// 🔹 Importação condicional de Parse (só no servidor)
+let Parse;
+if (typeof window === "undefined") {
+  const mod = await import("../../back4app/parseConfig.js");
+  Parse = mod.default || mod;
+}
+
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function POST(req) {
   try {
     const { url, options } = await req.json();
-    if (!url)
+
+    if (!url) {
       return NextResponse.json({ error: "Missing url" }, { status: 400 });
+    }
 
     const res = await fetch(url);
     if (!res.ok) throw new Error("Erro ao baixar o PDF original");
-    const arrayBuffer = await res.arrayBuffer();
+
+    const arrayBuffer = await fetch(url).then(r => r.arrayBuffer());
     const buffer = Buffer.from(arrayBuffer);
 
-    const data = await pdfParse.default(buffer);
+    const data = await pdfParse(buffer);
     const originalText = data.text || "";
 
     const prompt = `
@@ -30,8 +40,10 @@ Make the following transformations:
 - Emphasize action verbs in uppercase or wrapped with **strong** markers.
 - Break long questions into numbered bullets if needed.
 - Output only JSON with field "adapted_text" containing the adapted exam text.
+
 Original:
 ${originalText}
+
 Options: ${JSON.stringify(options || {})}
 `;
 
@@ -41,7 +53,9 @@ Options: ${JSON.stringify(options || {})}
       max_tokens: 1200,
     });
 
-    const adapted_text = llmResp.choices?.[0]?.message?.content?.trim?.() || "";
+    const adapted_text =
+      llmResp.choices?.[0]?.message?.content?.trim?.() ||
+      "Erro: resposta vazia";
 
     const doc = new PDFDocument({ margin: 40 });
     const writableStreamBuffer = new streamBuffers.WritableStreamBuffer();
@@ -54,7 +68,6 @@ Options: ${JSON.stringify(options || {})}
     doc.moveDown();
 
     doc.fontSize(12).fillColor("#000").text(adapted_text, { align: "left" });
-
     doc.end();
 
     const pdfBuffer = writableStreamBuffer.getContents();
@@ -71,15 +84,20 @@ Options: ${JSON.stringify(options || {})}
     const prova = new Prova();
     prova.set("arquivoAdaptado", savedFile);
     prova.set("arquivoOriginalUrl", url);
-    prova.set("usuario", Parse.User.current() || null);
+    prova.set("usuario", Parse.User.current?.() || null);
     const savedProva = await prova.save();
 
     return NextResponse.json({
       adaptedUrl: savedFile.url(),
       provaId: savedProva.id,
+      adaptedText: adapted_text,
     });
   } catch (err) {
-    console.error(err);
+    console.error("Erro em /api/adapt:", err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
+}
+
+export async function GET() {
+  return NextResponse.json({ message: "Rota /api/adapt ativa" });
 }
