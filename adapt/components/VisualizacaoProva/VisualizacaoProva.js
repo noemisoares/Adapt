@@ -1,22 +1,18 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import styles from "./VisualizacaoProva.module.css";
 
 export default function VisualizacaoProva({
-  originalUrl,
   parsedQuestions,
+  originalQuestions,
   settings,
   onRequestGenerateAdapted,
 }) {
-  const [mode, setMode] = useState("adapted");
-  const containerRef = useRef();
-
-  useEffect(() => {
-  }, [settings]);
+  const [mode, setMode] = useState("adapted"); // "adapted" ou "original"
 
   const renderQuestion = (q, i) => {
-    const number = settings.numbering ? `${i + 1}` : "";
+    const number = settings.numbering ? `${i + 1}. ` : "";
     return (
       <div key={q.id || i} className={styles.question}>
         <div className={styles.qnum}>{number}</div>
@@ -33,6 +29,9 @@ export default function VisualizacaoProva({
       </div>
     );
   };
+
+  const questionsToRender =
+    mode === "adapted" ? parsedQuestions : originalQuestions;
 
   return (
     <div className={styles.container}>
@@ -62,30 +61,13 @@ export default function VisualizacaoProva({
         </div>
       </div>
 
-      <div className={styles.preview} ref={containerRef}>
-        {mode === "original" ? (
-          originalUrl ? (
-            <iframe
-              src={originalUrl}
-              title="Original"
-              className={styles.iframe}
-            />
-          ) : (
-            <div className={styles.placeholder}>
-              Sem visualização original disponível.
-            </div>
-          )
-        ) : (
-          <div className={styles.adapted}>
-            {!parsedQuestions || parsedQuestions.length === 0 ? (
-              <div className={styles.placeholder}>
-                Sem conteúdo adaptado ainda. Clique em "Re-gerar Adaptado" para
-                tentar adaptar.
-              </div>
-            ) : (
-              parsedQuestions.map(renderQuestion)
-            )}
+      <div className={styles.preview}>
+        {!questionsToRender || questionsToRender.length === 0 ? (
+          <div className={styles.placeholder}>
+            Sem conteúdo {mode === "adapted" ? "adaptado" : "original"} ainda.
           </div>
+        ) : (
+          questionsToRender.map(renderQuestion)
         )}
       </div>
     </div>

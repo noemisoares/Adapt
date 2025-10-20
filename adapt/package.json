@@ -12,15 +12,17 @@
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.3",
     "lucide-react": "^0.545.0",
+    "mammoth": "^1.11.0",
     "next": "15.5.4",
     "node-fetch": "^3.3.2",
     "openai": "^6.4.0",
     "parse": "^6.1.1",
-    "pdf-parse": "^2.4.3",
+    "pdf-parse": "^2.4.5",
     "pdfkit": "^0.17.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "stream-buffers": "^3.0.3"
+    "stream-buffers": "^3.0.3",
+    "tesseract.js": "^6.0.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

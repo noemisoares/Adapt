@@ -5,7 +5,6 @@ import FileUploader from "../../../components/FileUploader/FileUploader";
 import ArquivoCarregado from "../../../components/ArquivoCarregado/ArquivoCarregado";
 import OpcoesAdaptacao from "../../../components/OpcoesAdaptacao/OpcoesAdaptacao";
 import VisualizacaoProva from "../../../components/VisualizacaoProva/VisualizacaoProva";
-import { uploadFile } from "../../back4app/provas/uploadFile";
 import Parse from "../../back4app/parseConfig";
 import styles from "./page.module.css";
 
@@ -14,12 +13,11 @@ import jsPDF from "jspdf";
 
 export default function UploadPage() {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [uploadedUrl, setUploadedUrl] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [provaId, setProvaId] = useState(null);
-
   const [parsedQuestions, setParsedQuestions] = useState([]);
+  const [originalQuestions, setOriginalQuestions] = useState([]);
   const [settings, setSettings] = useState({
     fontSize: 14,
     lineHeight: 1.8,
@@ -29,26 +27,32 @@ export default function UploadPage() {
     blocks: true,
   });
 
+  // === handleFileSelect usando API parse-file ===
   const handleFileSelect = async (file) => {
     if (!file) return;
     setSelectedFile(file);
     setUploading(true);
 
     try {
-      const url = await uploadFile(file);
-      setUploadedUrl(url);
+      const formData = new FormData();
+      formData.append("file", file);
 
-      const Prova = Parse.Object.extend("Provas");
-      const prova = new Prova();
-      prova.set("arquivoOriginal", new Parse.File(file.name, file));
-      prova.set("usuario", Parse.User.current());
-      const saved = await prova.save();
-      setProvaId(saved.id);
+      const res = await fetch("/api/parse-file", {
+        method: "POST",
+        body: formData,
+      });
 
-      setParsedQuestions([]);
+      const data = await res.json();
+
+      if (res.ok) {
+        setOriginalQuestions(data.originalQuestions || []);
+        setParsedQuestions(data.originalQuestions || []);
+      } else {
+        alert(data.error || "Erro ao processar arquivo.");
+      }
     } catch (err) {
-      console.error("Erro ao enviar:", err);
-      alert("Erro ao enviar a prova.");
+      console.error(err);
+      alert("Erro ao enviar arquivo para API.");
     } finally {
       setUploading(false);
     }
@@ -56,8 +60,8 @@ export default function UploadPage() {
 
   const handleReset = () => {
     setSelectedFile(null);
-    setUploadedUrl(null);
     setParsedQuestions([]);
+    setOriginalQuestions([]);
     setProvaId(null);
   };
 
@@ -128,42 +132,6 @@ export default function UploadPage() {
     }
   }, [provaId, selectedFile]);
 
-  const handleRequestGenerateAdapted = async () => {
-    if (!uploadedUrl) return;
-
-    try {
-      setDownloading(true);
-
-      const res = await fetch("/api/adapt", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          url: uploadedUrl,
-          options: settings, 
-        }),
-      });
-
-      const data = await res.json();
-      if (res.ok && data.adaptedUrl) {
-        setParsedQuestions([
-          {
-            id: "adapted_1",
-            text: data.adaptedText || "Texto adaptado não disponível",
-          },
-        ]);
-
-        if (data.provaId) setProvaId(data.provaId);
-      } else {
-        alert(data.error || "Erro ao gerar adaptação da prova.");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Erro ao se comunicar com a API de adaptação.");
-    } finally {
-      setDownloading(false);
-    }
-  };
-
   return (
     <div className={styles.container}>
       <div className={styles.headerArea}>
@@ -172,16 +140,17 @@ export default function UploadPage() {
 
       <div className={styles.grid}>
         <div className={styles.left}>
-          {!uploadedUrl ? (
+          {!selectedFile ? (
             <div className={styles.uploadArea}>
               <FileUploader onFileSelect={handleFileSelect} />
-              {uploading && <p className={styles.loadingText}>Enviando...</p>}
+              {uploading && (
+                <p className={styles.loadingText}>Lendo arquivo...</p>
+              )}
             </div>
           ) : (
             <>
               <ArquivoCarregado
                 file={selectedFile}
-                uploadedUrl={uploadedUrl}
                 onReplace={handleReset}
                 onRemove={handleReset}
               />
@@ -192,16 +161,16 @@ export default function UploadPage() {
         </div>
 
         <div className={styles.right}>
-          {uploadedUrl && (
+          {selectedFile && (
             <>
               <div
                 className={`${styles.visualizationCapture} ${styles.captureWrapper}`}
               >
                 <VisualizacaoProva
-                  originalUrl={uploadedUrl}
                   parsedQuestions={parsedQuestions}
+                  originalQuestions={originalQuestions}
                   settings={settings}
-                  onRequestGenerateAdapted={handleRequestGenerateAdapted}
+                  onRequestGenerateAdapted={() => {}}
                 />
               </div>
 
@@ -217,14 +186,12 @@ export default function UploadPage() {
                 <button
                   className={styles.btnSecondary}
                   onClick={async () => {
-                    if (!provaId) {
-                      alert(
-                        "Nenhuma prova registrada para salvar esboço. Reenvie arquivo."
-                      );
+                    if (!selectedFile) {
+                      alert("Nenhuma prova carregada para salvar esboço.");
                       return;
                     }
                     alert(
-                      "Esboço já salvo no Back4App. A adaptação real é gerada no PDF."
+                      "Esboço já está carregado localmente. Ao salvar, será enviado ao Back4App."
                     );
                   }}
                 >
