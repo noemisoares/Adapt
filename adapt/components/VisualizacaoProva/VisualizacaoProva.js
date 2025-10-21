@@ -9,7 +9,7 @@ export default function VisualizacaoProva({
   settings,
   onRequestGenerateAdapted,
 }) {
-  const [mode, setMode] = useState("adapted"); // "adapted" ou "original"
+  const [mode, setMode] = useState("adapted");
 
   const renderQuestion = (q, i) => {
     const number = settings.numbering ? `${i + 1}. ` : "";

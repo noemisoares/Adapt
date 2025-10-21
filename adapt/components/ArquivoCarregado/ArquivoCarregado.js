@@ -32,11 +32,6 @@ export default function ArquivoCarregado({
         <button className={styles.btnReplace} onClick={onReplace}>
           Trocar Arquivo
         </button>
-        {onRemove && (
-          <button className={styles.btnRemove} onClick={onRemove}>
-            Remover
-          </button>
-        )}
       </div>
     </div>
   );

@@ -1,36 +1,54 @@
 import { NextResponse } from "next/server";
-import PDFParse from "pdf-parse";
+import { createRequire } from "module";
 import mammoth from "mammoth";
 import Tesseract from "tesseract.js";
+import PDFParser from "pdf2json";
 
-export const config = {
-  api: {
-    bodyParser: false, // vamos ler o arquivo 
-  },
-};
+export const runtime = "nodejs";
 
-async function getBufferFromRequest(req) {
-  const chunks = [];
-  for await (const chunk of req.body) {
-    chunks.push(chunk);
-  }
-  return Buffer.concat(chunks);
+async function readFileFromFormData(req) {
+  const formData = await req.formData();
+  const file = formData.get("file");
+
+  if (!file) throw new Error("Nenhum arquivo recebido.");
+
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  return { buffer, contentType: file.type || "application/octet-stream" };
+}
+
+function extractTextFromPDF(buffer) {
+  return new Promise((resolve, reject) => {
+    try {
+      const pdfParser = new PDFParser();
+      pdfParser.on("pdfParser_dataError", (err) => reject(err.parserError));
+      pdfParser.on("pdfParser_dataReady", (pdfData) => {
+        const text = pdfData.Pages.map((page) =>
+          page.Texts.map((t) =>
+            decodeURIComponent(t.R.map((r) => r.T).join(" "))
+          ).join(" ")
+        ).join("\n");
+        resolve(text);
+      });
+      pdfParser.parseBuffer(buffer);
+    } catch (err) {
+      reject(err);
+    }
+  });
 }
 
 export async function POST(req) {
   try {
-    const buffer = await getBufferFromRequest(req);
+    const { buffer, contentType } = await readFileFromFormData(req);
+    console.log("📄 Tipo de arquivo recebido:", contentType);
 
-    const contentType = req.headers.get("content-type") || "";
     let extractedText = "";
 
-    if (contentType.includes("application/pdf")) {
-      const data = await PDFParse(buffer);
-      extractedText = data.text;
+    if (contentType.includes("pdf")) {
+      extractedText = await extractTextFromPDF(buffer);
     } else if (
-      contentType.includes(
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-      )
+      contentType.includes("word") ||
+      contentType.includes("officedocument")
     ) {
       const result = await mammoth.extractRawText({ buffer });
       extractedText = result.value;
@@ -39,12 +57,11 @@ export async function POST(req) {
       extractedText = data.text;
     } else {
       return NextResponse.json(
-        { error: "Formato de arquivo não suportado." },
+        { error: `Formato de arquivo não suportado: ${contentType}` },
         { status: 400 }
       );
     }
 
-    // separa as questões
     const questoes = extractedText
       .split(/(?:Quest(ão|ao)\s*\d+[:.)\s]+)/i)
       .filter((q) => q.trim().length > 0)
@@ -53,9 +70,17 @@ export async function POST(req) {
         text: q.trim(),
       }));
 
+    console.log("✅ Questões extraídas:", questoes.length);
+
     return NextResponse.json({ originalQuestions: questoes });
   } catch (err) {
-    console.error(err);
+    console.error("❌ Erro ao processar arquivo:", err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
+}
+
+export async function GET() {
+  return NextResponse.json({
+    message: "Rota /api/parse-file funcional (Node, pdf2json)",
+  });
 }

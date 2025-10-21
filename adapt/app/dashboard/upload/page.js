@@ -27,7 +27,6 @@ export default function UploadPage() {
     blocks: true,
   });
 
-  // === handleFileSelect usando API parse-file ===
   const handleFileSelect = async (file) => {
     if (!file) return;
     setSelectedFile(file);
@@ -185,15 +184,11 @@ export default function UploadPage() {
 
                 <button
                   className={styles.btnSecondary}
-                  onClick={async () => {
-                    if (!selectedFile) {
-                      alert("Nenhuma prova carregada para salvar esboço.");
-                      return;
-                    }
+                  onClick={() =>
                     alert(
-                      "Esboço já está carregado localmente. Ao salvar, será enviado ao Back4App."
-                    );
-                  }}
+                      "Esboço salvo localmente. Ao salvar, será enviado ao Back4App."
+                    )
+                  }
                 >
                   Salvar Esboço
                 </button>
