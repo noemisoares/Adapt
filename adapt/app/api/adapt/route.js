@@ -37,6 +37,7 @@ export async function POST(req) {
     // 🔹 2. Extrai o texto do PDF (funcionando!)
     const data = await pdfParse(buffer);
     const originalText = data.text || "";
+    console.log("📄 Texto completo extraído do PDF:\n", originalText);
 
     // 🔹 3. Monta o prompt para o modelo da OpenAI
     const prompt = `

@@ -62,8 +62,11 @@ export async function POST(req) {
       );
     }
 
-    const questoes = extractedText
-      .split(/(?:Quest(ão|ao)\s*\d+[:.)\s]+)/i)
+    const textWithoutHeader = extractedText.replace(/^.*?Tempo:.*?\n/, "");
+
+    const questoes = textWithoutHeader
+  // Quebra tanto com \n1) quanto com espaço1)
+      .split(/(?:^|\s)(?=\d+\s*[).]\s*)/g)
       .filter((q) => q.trim().length > 0)
       .map((q, i) => ({
         id: `q${i + 1}`,
