@@ -18,13 +18,15 @@ export async function uploadFile(file) {
 
     const Prova = Parse.Object.extend("Provas");
     const prova = new Prova();
+
     prova.set("arquivoOriginal", savedFile);
+    prova.set("arquivoOriginalUrl", savedFile.url());
     prova.set("usuario", Parse.User.current());
 
     const result = await prova.save();
-    console.log("Prova salva com sucesso:", result);
 
-    return savedFile.url();
+    console.log("Prova criada com arquivo original:", result.id);
+    return result.id; // devolve o ID da prova criada
   } catch (error) {
     console.error("Erro ao fazer upload:", error);
     alert("Erro: " + error.message);

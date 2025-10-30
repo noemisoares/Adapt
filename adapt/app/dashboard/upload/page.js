@@ -6,6 +6,7 @@ import ArquivoCarregado from "../../../components/ArquivoCarregado/ArquivoCarreg
 import OpcoesAdaptacao from "../../../components/OpcoesAdaptacao/OpcoesAdaptacao";
 import VisualizacaoProva from "../../../components/VisualizacaoProva/VisualizacaoProva";
 import Parse from "../../back4app/parseConfig";
+import { uploadFile } from "../../back4app/provas/uploadFile";
 import styles from "./page.module.css";
 
 import html2canvas from "html2canvas";
@@ -27,12 +28,14 @@ export default function UploadPage() {
     blocks: true,
   });
 
+  // Upload do arquivo original
   const handleFileSelect = async (file) => {
     if (!file) return;
     setSelectedFile(file);
     setUploading(true);
 
     try {
+      // Envia para API de parsing (PDF/DOCX/etc)
       const formData = new FormData();
       formData.append("file", file);
 
@@ -46,6 +49,10 @@ export default function UploadPage() {
       if (res.ok) {
         setOriginalQuestions(data.originalQuestions || []);
         setParsedQuestions(data.originalQuestions || []);
+
+        // 🚀 Envia também para o Back4App
+        const provaIdCriado = await uploadFile(file);
+        setProvaId(provaIdCriado);
       } else {
         alert(data.error || "Erro ao processar arquivo.");
       }
@@ -64,6 +71,7 @@ export default function UploadPage() {
     setProvaId(null);
   };
 
+  // 🧾 Geração e salvamento do PDF adaptado
   const handleGenerateAdaptedPdf = useCallback(async () => {
     const el = document.querySelector(`.${styles.visualizationCapture}`);
     if (!el) {
@@ -97,6 +105,7 @@ export default function UploadPage() {
       const parseFile = new Parse.File(safeName, pdfBlob);
       await parseFile.save();
 
+      // 🔄 Atualiza a mesma prova no Back4App com o arquivo adaptado
       if (provaId) {
         const Prova = Parse.Object.extend("Provas");
         const q = new Parse.Query(Prova);
@@ -104,15 +113,10 @@ export default function UploadPage() {
         provaObj.set("arquivoAdaptado", parseFile);
         provaObj.set("arquivoAdaptadoUrl", parseFile.url());
         await provaObj.save();
-      } else {
-        const Prova = Parse.Object.extend("Provas");
-        const newP = new Prova();
-        newP.set("arquivoAdaptado", parseFile);
-        newP.set("usuario", Parse.User.current());
-        const saved = await newP.save();
-        setProvaId(saved.id);
+        console.log("✅ Prova atualizada com arquivo adaptado:", provaId);
       }
 
+      // 💾 Faz o download local do arquivo adaptado
       const blobUrl = window.URL.createObjectURL(pdfBlob);
       const a = document.createElement("a");
       a.href = blobUrl;
@@ -184,11 +188,7 @@ export default function UploadPage() {
 
                 <button
                   className={styles.btnSecondary}
-                  onClick={() =>
-                    alert(
-                      "Esboço salvo localmente. Ao salvar, será enviado ao Back4App."
-                    )
-                  }
+                  onClick={handleGenerateAdaptedPdf}
                 >
                   Salvar Esboço
                 </button>
