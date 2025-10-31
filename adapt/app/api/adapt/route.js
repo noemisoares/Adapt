@@ -34,39 +34,57 @@ export async function POST(req) {
     const arrayBuffer = await res.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // 🔹 2. Extrai o texto do PDF (funcionando!)
+    // 🔹 2. Extrai o texto do PDF
     const data = await pdfParse(buffer);
     const originalText = data.text || "";
-    console.log("📄 Texto completo extraído do PDF:\n", originalText);
 
-    // 🔹 3. Monta o prompt para o modelo da OpenAI
+    // 🔹 3. Detecta título e separa questões
+    const lines = originalText
+      .split(/\r?\n/)
+      .map((l) => l.trim())
+      .filter(Boolean);
+    const titulo = lines[0] || "Prova sem título";
+    const corpo = lines.slice(1).join("\n");
+
+    // Divide pelas numerações mais comuns
+    const questoes = corpo
+      .split(/(?=\b(?:\d+\.)|(?:Quest[aã]o\s*\d+)|(?:Q\d+\))|(?:\d+\s*-))/gi)
+      .map((q) => q.trim())
+      .filter((q) => q.length > 3);
+
+    console.log("📘 Título detectado:", titulo);
+    console.log("📋 Questões detectadas:", questoes.length);
+
+    const structuredInput = { titulo, questoes };
+
+    // 🔹 4. Prompt da IA
     const prompt = `
 You are an assistant that adapts exam questions for students with ADHD.
-Make the following transformations: 
-- Keep the content and numeric parts intact.
-- Increase clarity: shorten long sentences, use direct commands.
-- Emphasize action verbs in uppercase or wrapped with **strong** markers.
-- Break long questions into numbered bullets if needed.
-- Output only JSON with field "adapted_text" containing the adapted exam text.
+Keep all numeric parts intact.
+Simplify instructions and emphasize key terms.
+Output must be JSON:
+{
+  "titulo": "...",
+  "questoes": ["Questão 1 adaptada...", "Questão 2 adaptada...", ...]
+}
 
-Original:
-${originalText}
+Original exam data:
+${JSON.stringify(structuredInput, null, 2)}
 
 Options: ${JSON.stringify(options || {})}
 `;
 
-    // 🔹 4. Chama a OpenAI
+    // 🔹 5. Chama a OpenAI
     const llmResp = await client.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [{ role: "user", content: prompt }],
-      max_tokens: 1200,
+      max_tokens: 2000,
     });
 
-    const adapted_text =
-      llmResp.choices?.[0]?.message?.content?.trim?.() ||
-      "Erro: resposta vazia";
+    const adapted_json = llmResp.choices?.[0]?.message?.content?.trim?.();
+    const adapted = JSON.parse(adapted_json || "{}");
 
-    // 🔹 5. Gera novo PDF com o texto adaptado
+    // 🔹 6. Gera PDF da versão adaptada
     const doc = new PDFDocument({ margin: 40 });
     const writableStreamBuffer = new streamBuffers.WritableStreamBuffer();
     doc.pipe(writableStreamBuffer);
@@ -74,14 +92,21 @@ Options: ${JSON.stringify(options || {})}
     doc
       .fontSize(18)
       .fillColor("#FF7A00")
-      .text("Versão Adaptada", { align: "center" });
+      .text(adapted.titulo, { align: "center" });
     doc.moveDown();
-    doc.fontSize(12).fillColor("#000").text(adapted_text, { align: "left" });
-    doc.end();
 
+    adapted.questoes?.forEach((q, i) => {
+      doc
+        .fontSize(13)
+        .fillColor("#000")
+        .text(`${i + 1}. ${q}`, { align: "left" })
+        .moveDown();
+    });
+
+    doc.end();
     const pdfBuffer = writableStreamBuffer.getContents();
 
-    // 🔹 6. Salva o arquivo adaptado no Back4App
+    // 🔹 7. Salva no Back4App
     const safeName = `adapted_${Date.now()}.pdf`;
     const parseFile = new Parse.File(
       safeName,
@@ -90,7 +115,7 @@ Options: ${JSON.stringify(options || {})}
     );
     const savedFile = await parseFile.save();
 
-    // 🔹 7. Cria registro da prova adaptada
+    // 🔹 8. Cria registro da prova adaptada
     const Prova = Parse.Object.extend("Provas");
     const prova = new Prova();
     prova.set("arquivoAdaptado", savedFile);
@@ -98,11 +123,11 @@ Options: ${JSON.stringify(options || {})}
     prova.set("usuario", Parse.User.current?.() || null);
     const savedProva = await prova.save();
 
-    // 🔹 8. Retorna resposta JSON
+    // 🔹 9. Retorna JSON completo para o front
     return NextResponse.json({
       adaptedUrl: savedFile.url(),
       provaId: savedProva.id,
-      adaptedText: adapted_text,
+      adapted,
     });
   } catch (err) {
     console.error("❌ Erro em /api/adapt:", err);
@@ -110,7 +135,7 @@ Options: ${JSON.stringify(options || {})}
   }
 }
 
-// 🔹 GET opcional para testar se a rota está ativa
+// 🔹 GET opcional
 export async function GET() {
   return NextResponse.json({ message: "Rota /api/adapt ativa e funcional" });
 }
