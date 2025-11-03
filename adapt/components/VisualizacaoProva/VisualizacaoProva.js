@@ -6,57 +6,41 @@ import styles from "./VisualizacaoProva.module.css";
 export default function VisualizacaoProva({
   parsedQuestions,
   originalQuestions,
-  settings,
   onRequestGenerateAdapted,
 }) {
   const [mode, setMode] = useState("adapted");
 
+  const questionsToRender =
+    mode === "adapted" ? parsedQuestions : originalQuestions;
+
   const renderQuestion = (q, i) => {
-    let adaptedText = q.text;
+    const text = q.text || q;
 
-    // 1. Destacar palavras-chave
-    if (settings.highlight) {
-      adaptedText = adaptedText.replace(
-        /\b(importante|atenção|resolva|calcule|explique|defina|identifique|analise)\b/gi,
-        '<mark style="background: #fff176; padding: 0 3px; border-radius: 3px;">$1</mark>'
-      );
-    }
-
-    // 2. Simplificar instruções
-    if (settings.simplify) {
-      adaptedText = adaptedText
-        .replace(/leia atentamente o texto a seguir[:,]?/gi, "")
-        .replace(
-          /(responda|explique|descreva)\s+com suas palavras/gi,
-          "$1 de forma simples"
-        )
-        .replace(/\s{2,}/g, " ");
-    }
-
-    // 3. Quebrar em blocos
-    if (settings.blocks) {
-      adaptedText = adaptedText.replace(/(\.|\?|\!)(\s+)/g, "$1<br><br>");
-    }
-
-    // 4. Numeração destacada
-    const number = settings.numbering ? `<strong>${i + 1}.</strong> ` : "";
+    // Converte **texto** para <strong>texto</strong> com estilo melhorado
+    const htmlText = text.replace(
+      /\*\*(.*?)\*\*/g,
+      '<strong style="color: #1a73e8; font-weight: bold;">$1</strong>'
+    );
 
     return (
-      <div key={q.id || i} className={styles.question}>
+      <div key={q.id || i} className={styles.questionBlock}>
         <div
           className={styles.qbody}
           style={{
-            fontSize: `${settings.fontSize}px`,
-            lineHeight: settings.lineHeight,
+            fontSize: "16px",
+            lineHeight: 1.8,
+            marginBottom: "25px",
+            padding: "20px",
+            backgroundColor: "#f8f9fa",
+            border: "1px solid #e0e0e0",
+            borderRadius: "8px",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
           }}
-          dangerouslySetInnerHTML={{ __html: number + adaptedText }}
+          dangerouslySetInnerHTML={{ __html: htmlText }}
         />
       </div>
     );
   };
-
-  const questionsToRender =
-    mode === "adapted" ? parsedQuestions : originalQuestions;
 
   return (
     <div className={styles.container}>
@@ -76,23 +60,22 @@ export default function VisualizacaoProva({
           </button>
         </div>
 
-        <div>
-          <button
-            className={styles.btnSmall}
-            onClick={onRequestGenerateAdapted}
-          >
-            Re-gerar Adaptado
-          </button>
-        </div>
+        <button className={styles.btnSmall} onClick={onRequestGenerateAdapted}>
+          Regenerar Adaptação
+        </button>
       </div>
 
       <div className={styles.preview}>
         {!questionsToRender || questionsToRender.length === 0 ? (
           <div className={styles.placeholder}>
-            Sem conteúdo {mode === "adapted" ? "adaptado" : "original"} ainda.
+            {mode === "adapted"
+              ? "Carregando questões adaptadas..."
+              : "Carregando questões originais..."}
           </div>
         ) : (
-          questionsToRender.map(renderQuestion)
+          <div className={styles.questionsList}>
+            {questionsToRender.map(renderQuestion)}
+          </div>
         )}
       </div>
     </div>
