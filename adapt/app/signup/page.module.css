@@ -1,0 +1,129 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #ff6a00 0%, #ff9740 50%, #fff0e0 100%);
+  padding-top: 140px;
+}
+
+/* Logo */
+.logo {
+  height: auto;
+  width: 180px;
+  margin-bottom: 40px;
+}
+
+/* Card */
+.card {
+  background-color: var(--color-card);
+  padding: 40px 50px;
+  border-radius: 14px;
+  width: 420px;
+  color: #fff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 24px;
+}
+
+/* Formulário */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+}
+
+.form label {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.form input {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  outline: none;
+}
+
+.submitBtn {
+  margin-top: 10px;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background-color: #e85b2a;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.submitBtn:hover {
+  background-color: #f2763b;
+}
+
+/* Botão Google */
+.googleBtn {
+  background: #fff;
+  color: #222;
+  font-weight: 700;
+  border: none;
+  border-radius: 40px;
+  padding: 10px;
+  width: 100%;
+  margin-top: 12px;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s;
+}
+
+.googleBtn:hover {
+  transform: scale(1.03);
+}
+
+.error {
+  color: #ffdddd;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* Link Login */
+.loginLink {
+  margin-top: 14px;
+  font-size: 14px;
+}
+
+.loginLink a {
+  color: #fff;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* Footer */
+.footer {
+  width: 100%;
+  text-align: center;
+  padding: 20px 0;
+  color: #333;
+  background: #fff;
+  font-size: 14px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.footer nav a {
+  color: #333;
+  text-decoration: none;
+  margin: 0 10px;
+  font-weight: 600;
+}
+
+.footer nav a:hover {
+  color: #ff6a00;
+}
