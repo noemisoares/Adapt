@@ -1,8 +1,226 @@
 .main {
+  padding: 60px 40px;
+  background: linear-gradient(180deg, #fff8f3 0%, #fff 100%);
+  min-height: 100vh;
+  font-family: "Inter", sans-serif;
+}
+
+.header {
+  text-align: left;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  font-size: 32px;
+  font-weight: 900;
+  color: #ff6a00;
+}
+
+.header p {
+  color: #555;
+  font-size: 16px;
+}
+
+/* === PAINEL DE RESUMO === */
+.summary {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.summaryCard {
+  flex: 1;
+  min-width: 220px;
+  background: linear-gradient(135deg, #fff 0%, #ffebd6 100%);
+  border: 1px solid #ffe2c3;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 6px 16px rgba(255, 106, 0, 0.15);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.summaryCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(255, 106, 0, 0.25);
+}
+
+.summaryLabel {
+  font-size: 14px;
+  color: #a64b00;
+  font-weight: 700;
+}
+
+.summaryValue {
+  font-size: 22px;
+  font-weight: 900;
+  color: #ff6a00;
+  margin-top: 6px;
+}
+
+/* === GRID DE PROVAS === */
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
   display: flex;
   flex-direction: column;
-  padding: 2rem;
-  margin-left: 220px;
-  min-height: 100vh;
-  background-color: #fafafa;
+  justify-content: space-between;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(255, 106, 0, 0.25);
+}
+
+.cardIcon {
+  font-size: 30px;
+  color: #ff6a00;
+  margin-bottom: 12px;
+}
+
+.cardBody h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.cardDate {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 14px;
+}
+
+.cardActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.openBtn,
+.downloadBtn {
+  background-color: #ff6a00;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.openBtn:hover,
+.downloadBtn:hover {
+  background-color: #ff8533;
+}
+
+.deleteBtn {
+  background-color: #fff;
+  color: #ff3d00;
+  border: 1px solid #ff3d00;
+  border-radius: 6px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.3s;
+}
+
+.deleteBtn:hover {
+  background-color: #ff3d00;
+  color: #fff;
+}
+
+.noFile {
+  color: #aaa;
+  font-size: 14px;
+}
+
+.loading,
+.error,
+.noProvas {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.noProvas h2 {
+  color: #ff6a00;
+  font-weight: 800;
+}
+
+.noProvas a {
+  color: #ff6a00;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* === Responsivo === */
+@media (max-width: 900px) {
+  .summary {
+    flex-direction: column;
+  }
+
+  .cardsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+/* === GRÁFICO DE BARRAS === */
+.chartSection {
+  margin-bottom: 50px;
+}
+
+.chartSection h2 {
+  font-size: 20px;
+  font-weight: 900;
+  color: #333;
+  margin-bottom: 18px;
+}
+
+.chartContainer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  height: 220px;
+  box-shadow: 0 4px 14px rgba(255, 106, 0, 0.15);
+}
+
+.barGroup {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.bar {
+  width: 26px;
+  background: linear-gradient(180deg, #ff8a3a 0%, #ff6a00 100%);
+  border-radius: 8px 8px 0 0;
+  transition: height 0.3s ease;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.bar:hover {
+  background: linear-gradient(180deg, #ffa45c 0%, #ff7c1f 100%);
+}
+
+.barLabel {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #444;
+  font-weight: 700;
 }
