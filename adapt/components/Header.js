@@ -14,7 +14,7 @@ export function Header() {
         {/* === LOGO === */}
         <div className={styles.logoContainer}>
           <Image
-            src="/Identidade_Visual/adapt-logo.png"
+            src="/IdentidadeVisual/ADAPTlaranjasemfundo.png"
             alt="Adapt"
             width={130}
             height={45}

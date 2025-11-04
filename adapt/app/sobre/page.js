@@ -1,6 +1,7 @@
 "use client";
 
 import styles from "./sobre.module.css";
+import Image from "next/image";
 
 export default function Sobre() {
   return (
@@ -13,16 +14,18 @@ export default function Sobre() {
           </h1>
 
           <p className={styles.lead}>
-            Somos um grupo de estudantes da UNICAP dedicados a desenvolver soluções
-            tecnológicas que promovam inclusão e acessibilidade na educação. Nosso
-            projeto, Adapt, nasceu da necessidade de apoiar professores na adaptação
-            de provas para alunos neurodivergentes, com foco inicial no TDAH.
+            Somos um grupo de estudantes da UNICAP dedicados a desenvolver
+            soluções tecnológicas que promovam inclusão e acessibilidade na
+            educação. Nosso projeto, Adapt, nasceu da necessidade de apoiar
+            professores na adaptação de provas para alunos neurodivergentes, com
+            foco inicial no TDAH.
           </p>
 
           <p className={styles.lead}>
-            Acreditamos que a tecnologia pode ser uma aliada poderosa na construção
-            de avaliações mais justas, claras e acessíveis, garantindo que todos os
-            alunos tenham a oportunidade de demonstrar seu verdadeiro potencial.
+            Acreditamos que a tecnologia pode ser uma aliada poderosa na
+            construção de avaliações mais justas, claras e acessíveis,
+            garantindo que todos os alunos tenham a oportunidade de demonstrar
+            seu verdadeiro potencial.
           </p>
 
           <p className={styles.ribbon}>
@@ -34,35 +37,39 @@ export default function Sobre() {
           <div className={styles.features}>
             <div className={styles.card}>
               <img
-                src="/Identidade_Visual/icones/inclusao-missao.png"
+                src="/IdentidadeVisual/icones/inclusao-missao.png"
                 alt="Ícone Inclusão com Missão"
               />
               <div className={styles.cardTitle}>INCLUSÃO COMO MISSÃO</div>
               <div className={styles.cardBody}>
-                Acreditamos que cada estudante merece condições justas para demonstrar
-                conhecimento.
+                Acreditamos que cada estudante merece condições justas para
+                demonstrar conhecimento.
               </div>
             </div>
 
             <div className={styles.card}>
               <img
-                src="/Identidade_Visual/icones/tecnologia.png"
+                src="/IdentidadeVisual/icones/tecnologia.png"
                 alt="Ícone Tecnologia"
               />
-              <div className={styles.cardTitle}>TECNOLOGIA A FAVOR DA EDUCAÇÃO</div>
+              <div className={styles.cardTitle}>
+                TECNOLOGIA A FAVOR DA EDUCAÇÃO
+              </div>
               <div className={styles.cardBody}>
-                Inovação que acelera a criação de provas adaptadas às necessidades reais.
+                Inovação que acelera a criação de provas adaptadas às
+                necessidades reais.
               </div>
             </div>
 
             <div className={styles.card}>
               <img
-                src="/Identidade_Visual/icones/humano.png"
+                src="/IdentidadeVisual/icones/humano.png"
                 alt="Ícone Impacto Humano"
               />
               <div className={styles.cardTitle}>IMPACTO HUMANO</div>
               <div className={styles.cardBody}>
-                Mais do que avaliações, buscamos qualidade de vida e reconhecimento para todos.
+                Mais do que avaliações, buscamos qualidade de vida e
+                reconhecimento para todos.
               </div>
             </div>
           </div>

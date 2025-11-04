@@ -10,11 +10,13 @@
 }
 
 /* Faixas laranja superior e inferior */
+/*
 .topStripe,
 .bottomStripe {
   height: 10px;
   background-color: #ff6a00;
 }
+*/
 
 /* Container de navegação */
 .navbar {
@@ -33,7 +35,7 @@
 
 .logo {
   height: auto;
-  width: 120px;
+  width: 130px;
   object-fit: contain;
 }
 

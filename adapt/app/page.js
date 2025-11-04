@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import styles from "./page.module.css";
+import Image from "next/image";
 
 export default function Page() {
   const [openFAQ, setOpenFAQ] = useState(null);
@@ -58,7 +59,7 @@ export default function Page() {
           <div className={styles.features}>
             <div className={styles.card}>
               <img
-                src="/Identidade_Visual/icones/inclusao.png"
+                src="/IdentidadeVisual/icones/inclusao.png"
                 alt="Ícone Inclusão"
               />
               <div className={styles.cardTitle}>INCLUSÃO REAL</div>
@@ -69,7 +70,7 @@ export default function Page() {
 
             <div className={styles.card}>
               <img
-                src="/Identidade_Visual/icones/agilidade.png"
+                src="/IdentidadeVisual/icones/agilidade.png"
                 alt="Ícone Agilidade"
               />
               <div className={styles.cardTitle}>AGILIDADE PARA PROFESSORES</div>
@@ -80,7 +81,7 @@ export default function Page() {
 
             <div className={styles.card}>
               <img
-                src="/Identidade_Visual/icones/justica.png"
+                src="/IdentidadeVisual/icones/justica.png"
                 alt="Ícone Justiça"
               />
               <div className={styles.cardTitle}>JUSTIÇA NA AVALIAÇÃO</div>

@@ -26,7 +26,7 @@
   top: 20px;
   width: 210px;
   height: 540px;
-  background: url("/Identidade_Visual/einstein.png") no-repeat center/contain;
+  background: url("/IdentidadeVisual/einstein.png") no-repeat center/contain;
   opacity: 0.95;
   filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.25));
   pointer-events: none;
