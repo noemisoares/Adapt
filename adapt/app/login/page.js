@@ -4,6 +4,8 @@ import { useState } from "react";
 import Parse from "../back4app/parseConfig";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
+import styles from "./page.module.css";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -23,34 +25,59 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="p-6 flex flex-col items-center">
-        <Link href="/">
-          Voltar para Homepage
-        </Link>
+    <main className={styles.main}>
+      {/* Logo acima do card */}
+      <Image
+        src="/IdentidadeVisual/ADAPTbrancosemfundo.png"
+        alt="Logo Adapt"
+        width={180}
+        height={60}
+        className={styles.logo}
+        priority
+      />
 
-      <h1 className="text-xl font-bold mb-4">Login</h1>
-      <form onSubmit={handleLogin} className="flex flex-col gap-3 w-64">
-        <input
-          type="text"
-          placeholder="Nome de usuário"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="p-2 border rounded"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="p-2 border rounded"
-          required
-        />
-        <button type="submit" className="btn bg-blue-500 text-white">
-          Entrar
-        </button>
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-      </form>
+      <div className={styles.card}>
+        <h1 className={styles.title}>Fazer Login</h1>
+
+        <form onSubmit={handleLogin} className={styles.form}>
+          <label>Nome de usuário</label>
+          <input
+            type="text"
+            placeholder="Digite seu nome de usuário"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+
+          <label>Senha</label>
+          <input
+            type="password"
+            placeholder="Digite sua senha"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+
+          <button type="submit" className={styles.submitBtn}>
+            Entrar
+          </button>
+
+          {error && <p className={styles.error}>{error}</p>}
+        </form>
+
+        <p className={styles.loginLink}>
+          Ainda não tem conta? <Link href="/signup">Crie agora</Link>
+        </p>
+      </div>
+
+      <footer className={styles.footer}>
+        <p>© 2025 Adapt, Inc.</p>
+        <nav>
+          <a href="#">Quem Somos?</a>
+          <a href="#">Parcerias</a>
+          <a href="#">Termos & Privacidade</a>
+        </nav>
+      </footer>
     </main>
   );
 }
