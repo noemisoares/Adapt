@@ -3,7 +3,7 @@
 <img src="adapt/public/Identidade_Visual/ADAPT_L_sem fundo.png" alt="Identidade Visual do Projeto ADAPT" width="400">
 
 ## Projeto Integrador – UNICAP
-Ferramenta digital desenvolvida para auxiliar professores na adaptação de avaliações para alunos neurodivergentes, com foco inicial em TDAH.
+Ferramenta digital desenvolvida para auxiliar professores na adaptação de avaliações para alunos neurodivergentes, com foco inicial em TDAH..
 [Acesse nosso sitema web](https://adapt-seven.vercel.app/)
 
 ## Visão Geral
