@@ -2,29 +2,43 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import styles from "./Header.module.css";
 import { useEffect, useState } from "react";
 
 export function Header() {
-  return (
-    <header className={styles.header}>
-      <div className={styles.topStripe}></div>
+  const [darkMode, setDarkMode] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-      <nav className={styles.navbar}>
-        {/* === LOGO === */}
-        <div className={styles.logoContainer}>
+  useEffect(() => {
+    setMounted(true);
+    const saved = localStorage.getItem("darkMode") === "true";
+    setDarkMode(saved);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const html = document.documentElement;
+    if (darkMode) html.classList.add("dark");
+    else html.classList.remove("dark");
+    localStorage.setItem("darkMode", darkMode ? "true" : "false");
+  }, [darkMode, mounted]);
+
+  if (!mounted) return null;
+
+  return (
+    <header className="header">
+      <nav className="navbar">
+        <div className="logoContainer">
           <Image
             src="/IdentidadeVisual/ADAPTlaranjasemfundo.png"
             alt="Adapt"
             width={130}
             height={45}
-            className={styles.logo}
+            className="logo"
             priority
           />
         </div>
 
-        {/* === LINKS PRINCIPAIS === */}
-        <ul className={styles.navList}>
+        <ul className="navList">
           <li>
             <Link href="/">Início</Link>
           </li>
@@ -32,31 +46,27 @@ export function Header() {
             <Link href="/sobre">Sobre Nós</Link>
           </li>
           <li>
-            <Link href="/recursos">Recursos</Link>
+            <Link href="/">Recursos</Link>
           </li>
         </ul>
 
-        {/* === AÇÕES (LOGIN / CADASTRO) === */}
-        <div className={styles.rightSide}>
-          <Link href="/login" className={styles.btnOutline}>
-            Fazer Login
+        <div className="rightSide">
+          <Link href="/signup" className="btnOutline">
+            Criar conta
           </Link>
-          <Link href="/signup" className={styles.btnPrimary}>
-            Criar Conta
+          <Link href="/login" className="btnPrimary">
+            Fazer login
           </Link>
-          {/*
+
           <button
-            className="theme-button"
+            className="btnOutline"
             onClick={() => setDarkMode((s) => !s)}
             aria-label="Alternar tema claro/escuro"
           >
-            {darkMode ? "☀️" : "🌙"}
+            {darkMode ? "☀︎" : "☾"}
           </button>
-          */}
         </div>
       </nav>
-
-      <div className={styles.bottomStripe}></div>
     </header>
   );
 }

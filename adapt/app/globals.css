@@ -13,18 +13,20 @@ body {
 /* TEMA 01 - Modo Claro */
 :root {
   --color-bg: #ffffff;
-  --color-primary: #fa6413;          /* cor principal */
-  --color-primary-hover: #ff9955;    /* cor de destaque */
-  --color-text: #0e0e0e;             /* texto padrão */
-  --color-title: #5d3106;            /* títulos e cabeçalhos */
-  --color-accent: #cc4700;           /* botões secundários */
-  --color-border: #dddddd;           /* bordas sutis */
-  --color-card: #b94b1a;             /* cor do card*/
+  --color-header: #ffffff;
+  --color-primary: #fa6413; /* cor principal */
+  --color-primary-hover: #ff9955; /* cor de destaque */
+  --color-text: #0e0e0e; /* texto padrão */
+  --color-title: #5d3106; /* títulos e cabeçalhos */
+  --color-accent: #cc4700; /* botões secundários */
+  --color-border: #dddddd; /* bordas sutis */
+  --color-card: #b94b1a; /* cor do card*/
 }
 
 /* TEMA 02 - Modo Escuro */
 .dark {
   --color-bg: #0f0e0e;
+  --color-header: #1d1d1d;
   --color-primary: #fa6413;
   --color-primary-hover: #d54b00;
   --color-text: #fcfcfc;
@@ -52,111 +54,109 @@ a:hover {
   color: var(--color-primary-hover);
 }
 
-/* HEADER / NAVEGAÇÃO */
-.site-header {
-  background-color: var(--color-primary);
-  border-bottom: 1px solid var(--color-border);
-  padding: 8px 16px;
-  transition: background 0.3s, border-color 0.3s;
+.header {
+  width: 100%;
+  background-color: var(--color-bg);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
 }
 
-.nav {
+.navbar {
   display: flex;
+  align-items: center;
   justify-content: space-between;
+  padding: 14px 48px;
+  background: var(--color-header); /*Testando modo dark*/
+}
+
+.logoContainer {
+  display: flex;
   align-items: center;
 }
 
 .logo {
-  font-weight: bold;
-  font-size: 1.3rem;
-  color: var(--color-bg);
+  height: auto;
+  width: 130px;
+  object-fit: contain;
 }
 
-.nav-list {
-  display: flex;
-  gap: 24px;
+.navList {
   list-style: none;
+  display: flex;
+  gap: 36px;
 }
 
-.nav-list a {
-  color: var(--color-bg);
-  font-weight: bold;
+.navList a {
+  text-decoration: none;
+  color: var(--color-text);
+  font-weight: 700;
+  font-size: 1rem;
   transition: color 0.2s ease;
 }
 
-.nav-list a:hover {
-  color: var(--color-primary-hover);
+.navList a:hover {
+  color: #ff6a00;
 }
 
-.right-side {
+.rightSide {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
-/* BOTÕES PADRONIZADOS */
-.btn {
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  background-color: var(--color-accent);
-  color: var(--color-bg);
-  transition: background 0.3s ease, color 0.3s ease;
-}
-
-.btn:hover {
-  background-color: var(--color-primary-hover);
-}
-
-.btn-primary {
-  background-color: var(--color-primary);
-}
-
-.btn-secondary {
-  background-color: var(--color-accent);
-}
-
-/* BOTÃO DE TEMA */
-.theme-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2rem;
-  color: var(--color-bg);
-  transition: color 0.3s;
-}
-
-/* CLASSES UTILITÁRIAS */
-.container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-.flex {
-  display: flex;
-  align-items: center;
-}
-
-.flex-between {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.transition {
+.btnOutline {
+  border: 2px solid #ff6a00;
+  color: #ff6a00;
+  font-weight: 800;
+  padding: 8px 18px;
+  border-radius: 30px;
+  background-color: transparent;
   transition: all 0.3s ease;
 }
 
-/* ANIMAÇÕES */
+.btnOutline:hover {
+  background-color: #ff6a00;
+  color: #fff;
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(255, 106, 0, 0.4);
+}
+
+.btnPrimary {
+  background-color: #ff6a00;
+  border: 2px solid #ff6a00;
+  color: #fff;
+  font-weight: 800;
+  padding: 8px 18px;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+}
+
+.btnPrimary:hover {
+  background-color: #e25800;
+  border-color: #e25800;
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(255, 106, 0, 0.4);
+}
+
+@media (max-width: 900px) {
+  .navbar {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .navList {
+    gap: 18px;
+  }
+
+  .btnPrimary,
+  .btnOutline {
+    padding: 10px 24px;
+  }
+}
+
 .fade-in {
   animation: fadeIn 0.5s ease-in-out;
 }

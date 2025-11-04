@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import styles from "./page.module.css";
+import { Header } from "../components/Header";
 import Image from "next/image";
 
 export default function Page() {
@@ -28,9 +29,8 @@ export default function Page() {
 
   return (
     <>
-      {/* === HERO PRINCIPAL === */}
+      <Header />
       <section className={styles.hero}>
-        {/* imagem do astronauta */}
         <img
           src="/IdentidadeVisual/astronaut.png"
           alt="Astronauta"
@@ -44,15 +44,17 @@ export default function Page() {
           </h1>
 
           <p className={styles.lead}>
-            Nossa plataforma ajuda professores a adaptar provas de forma ágil e personalizada
-            para alunos neurodivergentes. Com tecnologia inteligente, tornamos as avaliações
-            mais inclusivas, mantendo a qualidade e dando ao estudante a chance de mostrar
-            seu verdadeiro potencial.
+            Nossa plataforma ajuda professores a adaptar provas de forma ágil e
+            personalizada para alunos neurodivergentes. Com tecnologia
+            inteligente, tornamos as avaliações mais inclusivas, mantendo a
+            qualidade e dando ao estudante a chance de mostrar seu verdadeiro
+            potencial.
           </p>
 
           <p className={styles.ribbon}>
-            REVELE SEU VERDADEIRO POTENCIAL: AVALIE DE FORMA JUSTA, APRENDA SEM BARREIRAS E
-            CONQUISTE RESULTADOS COM PROVAS INCLUSIVAS E PERSONALIZADAS.
+            REVELE SEU VERDADEIRO POTENCIAL: AVALIE DE FORMA JUSTA, APRENDA SEM
+            BARREIRAS E CONQUISTE RESULTADOS COM PROVAS INCLUSIVAS E
+            PERSONALIZADAS.
           </p>
 
           {/* === CARDS === */}
@@ -64,7 +66,8 @@ export default function Page() {
               />
               <div className={styles.cardTitle}>INCLUSÃO REAL</div>
               <div className={styles.cardBody}>
-                Provas adaptadas às necessidades de cada estudante, respeitando suas diferenças.
+                Provas adaptadas às necessidades de cada estudante, respeitando
+                suas diferenças.
               </div>
             </div>
 
@@ -75,7 +78,8 @@ export default function Page() {
               />
               <div className={styles.cardTitle}>AGILIDADE PARA PROFESSORES</div>
               <div className={styles.cardBody}>
-                Poucos cliques para transformar avaliações em versões acessíveis.
+                Poucos cliques para transformar avaliações em versões
+                acessíveis.
               </div>
             </div>
 
@@ -103,7 +107,9 @@ export default function Page() {
             {faqs.map((item, index) => (
               <div
                 key={index}
-                className={`${styles.faqItem} ${openFAQ === index ? styles.open : ""}`}
+                className={`${styles.faqItem} ${
+                  openFAQ === index ? styles.open : ""
+                }`}
                 onClick={() => toggleFAQ(index)}
               >
                 <div className={styles.faqHeader}>

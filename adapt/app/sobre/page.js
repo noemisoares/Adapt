@@ -1,12 +1,13 @@
 "use client";
 
-import styles from "./sobre.module.css";
+import styles from "./page.module.css";
+import { Header } from "../../components/Header";
 import Image from "next/image";
 
 export default function Sobre() {
   return (
     <>
-      {/* === HERO === */}
+      <Header />
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <h1>
@@ -82,7 +83,6 @@ export default function Sobre() {
           </div>
         </div>
       </section>
-
       {/* === FOOTER === */}
       <footer className={styles.footer}>
         <div className={styles.footerContent}>
