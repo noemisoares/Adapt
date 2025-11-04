@@ -1,8 +1,8 @@
 "use client";
-import styles from "./page.module.css"
 import { useState } from "react";
 import Parse from "../back4app/parseConfig";
 import { useRouter } from "next/navigation";
+import styles from "./page.module.css";
 import Image from "next/image";
 
 export default function SignUpPage() {
