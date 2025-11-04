@@ -11,7 +11,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     async function getUserAndFetch() {
-      const current = await Parse.User.currentAsync(); // ✅ garante usuário válido mesmo após login
+      const current = await Parse.User.currentAsync();
       if (current) {
         setUser(current);
         fetchProvas(current);
