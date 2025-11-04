@@ -1,0 +1,204 @@
+/* === HERO === */
+.hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  padding-top: 160px; /* espaço para a barra fixa */
+  padding-bottom: 80px;
+  background: linear-gradient(
+    180deg,
+    #ff6a00 0%,
+    #ff7a24 28%,
+    #ff9b55 48%,
+    #ffc8a0 68%,
+    #ffe9da 83%,
+    #fff7f0 92%,
+    #ffffff 100%
+  );
+  background-attachment: fixed;
+}
+
+/* === Einstein à direita === */
+.hero::after {
+  content: "";
+  position: absolute;
+  right: 290px;
+  top: 20px;
+  width: 210px;
+  height: 540px;
+  background: url("/Identidade_Visual/einstein.png") no-repeat center/contain;
+  opacity: 0.95;
+  filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.25));
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* === Conteúdo principal === */
+.heroContent {
+  position: relative;
+  z-index: 2;
+  padding: 0 40px;
+  max-width: 1080px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.hero h1 {
+  font-size: 58px;
+  font-weight: 900;
+  line-height: 1.05;
+  text-transform: uppercase;
+  color: #fff;
+  margin: 0 0 14px;
+  letter-spacing: 1px;
+  max-width: 600px;
+}
+
+.stroke {
+  color: #ffeadc;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.08);
+}
+
+.lead {
+  max-width: 600px;
+  color: #fff;
+  opacity: 0.95;
+  font-weight: 500;
+  font-size: 18px;
+  margin-bottom: 24px;
+}
+
+.ribbon {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  opacity: 0.95;
+  margin-bottom: 50px;
+}
+
+/* === CARDS === */
+.features {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 26px;
+  margin-top: 60px;
+  z-index: 3;
+  flex-wrap: wrap;
+}
+
+.card {
+  width: 300px;
+  height: 260px;
+  background: #f97820;
+  border-radius: 10px;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.25s ease, box-shadow 0.3s ease;
+  padding: 26px 16px;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 26px rgba(255, 106, 0, 0.3);
+}
+
+.card img {
+  height: 60px;
+  width: auto;
+  margin-bottom: 16px;
+  filter: brightness(0) invert(1);
+}
+
+.cardTitle {
+  font-weight: 900;
+  font-size: 16px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.cardBody {
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.95;
+}
+
+/* === Chamada final === */
+.finalCall {
+  margin-top: 80px;
+  text-align: left;
+}
+
+.finalCall h2 {
+  color: #000;
+  font-size: 24px;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.link {
+  color: #ff6a00;
+  font-weight: 700;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: #d94f00;
+}
+
+/* === FOOTER === */
+.footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 20px 0;
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+  background: #fff;
+}
+
+.footerContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer nav a {
+  color: #444;
+  text-decoration: none;
+  margin: 0 12px;
+  font-weight: 600;
+}
+
+.footer nav a:hover {
+  color: #ff6a00;
+}
+
+/* === RESPONSIVO === */
+@media (max-width: 960px) {
+  .hero h1 {
+    font-size: 42px;
+    text-align: center;
+  }
+
+  .lead {
+    text-align: center;
+    margin: 0 auto 36px;
+  }
+
+  .features {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero::after {
+    opacity: 0.25;
+    right: -40px;
+    top: 160px;
+    width: 340px;
+  }
+}

@@ -1,21 +1,265 @@
-.page {
-  display: flex;
-  flex-direction: column;
+/* === HERO PRINCIPAL === */
+.hero {
+  position: relative;
+  overflow: hidden;
   min-height: 100vh;
-  font-family: sans-serif;
+  padding-top: 160px; /* espaço para a barra fixa */
+  padding-bottom: 80px;
+  background: linear-gradient(
+    180deg,
+    #ff6a00 0%,
+    #ff7a24 28%,
+    #ff9b55 48%,
+    #ffc8a0 68%,
+    #ffe9da 83%,
+    #fff7f0 92%,
+    #ffffff 100%
+  );
+  background-attachment: fixed;
 }
 
-.main {
-  flex: 1;
+/* === Astronauta à direita === */
+.astronaut {
+  position: absolute;
+  right: 175px;
+  top: 10px;
+  width: 520px;
+  height: auto;
+  opacity: 0.95;
+  filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.25));
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* === Conteúdo principal === */
+.heroContent {
+  position: relative;
+  z-index: 2;
+  padding: 0 40px;
+  max-width: 1080px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.hero h1 {
+  font-size: 58px;
+  font-weight: 900;
+  line-height: 1.05;
+  text-transform: uppercase;
+  color: #fff;
+  margin: 0 0 14px;
+  letter-spacing: 1px;
+  max-width: 600px;
+}
+
+.stroke {
+  color: #ffeadc;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.08);
+}
+
+.lead {
+  max-width: 540px;
+  color: #fff;
+  opacity: 0.95;
+  font-weight: 500;
+  font-size: 18px;
+  margin-bottom: 40px;
+}
+
+.ribbon {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  opacity: 0.95;
+}
+
+/* === CARDS === */
+.features {
   display: flex;
   justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 2rem;
-  background-color: var(--background);
+  align-items: stretch;
+  gap: 26px;
+  margin-top: 60px;
+  z-index: 3;
 }
 
-.main h2 {
-  font-size: 2rem;
-  color: var(--text);
+.card {
+  width: 300px;
+  height: 260px;
+  background: #f97820;
+  border-radius: 10px;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.25s ease, box-shadow 0.3s ease;
+  padding: 26px 16px;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 26px rgba(255, 106, 0, 0.3);
+}
+
+/* Ícones nos cards */
+.card img {
+  height: 60px;
+  width: auto;
+  margin-bottom: 16px;
+  filter: brightness(0) invert(1);
+}
+
+.cardTitle {
+  font-weight: 900;
+  font-size: 16px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.cardBody {
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.95;
+}
+
+/* === FAQ === */
+.faq {
+  background: linear-gradient(180deg, #fff7f0 0%, #ffffff 100%);
+  padding: 80px 0 60px;
+  text-align: left;
+}
+
+.wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.faq h2 {
+  color: #ff6a00;
+  font-size: 22px;
+  margin-bottom: 4px;
+  font-weight: 800;
+}
+
+.faq h3 {
+  color: #000;
+  font-size: 38px;
+  font-weight: 900;
+  margin-bottom: 22px;
+}
+
+.faqList {
+  border-top: 2px solid #f25f02;
+}
+
+/* FAQ Item */
+.faqItem {
+  border-bottom: 1px solid #ddd;
+  padding: 18px 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.faqItem:hover {
+  background-color: #fff9f3;
+}
+
+.faqHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.num {
+  color: #ff6a00;
+  font-weight: 800;
+  margin-right: 10px;
+}
+
+.faqQ {
+  font-weight: 700;
+  color: #333;
+  flex: 1;
+}
+
+.toggleIcon {
+  font-weight: bold;
+  color: #ff6a00;
+}
+
+/* Resposta (aberta e fechada) */
+.faqA {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: all 0.35s ease;
+  padding: 0 10px 0 38px;
+  font-size: 14px;
+  color: #444;
+}
+
+.faqA.show {
+  max-height: 200px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* === FOOTER === */
+.footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 20px 0;
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+  background: #fff;
+}
+
+.footerContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer nav a {
+  color: #444;
+  text-decoration: none;
+  margin: 0 12px;
+  font-weight: 600;
+}
+
+.footer nav a:hover {
+  color: #ff6a00;
+}
+
+/* === RESPONSIVO === */
+@media (max-width: 960px) {
+  .hero h1 {
+    font-size: 42px;
+    text-align: center;
+  }
+
+  .lead {
+    text-align: center;
+    margin: 0 auto 36px;
+  }
+
+  .features {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .astronaut {
+    opacity: 0.25;
+    right: -60px;
+    top: 120px;
+    width: 420px;
+  }
+
+  .faq h3 {
+    font-size: 30px;
+  }
 }
