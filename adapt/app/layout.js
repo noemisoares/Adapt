@@ -1,4 +1,5 @@
 import "./globals.css";
+import { HeaderController } from "../components/HeaderController";
 
 export const metadata = {
   title: "Adapt",
@@ -18,6 +19,8 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
+        {/* O Header agora é controlado pelo HeaderController */}
+        <HeaderController />
         <main>{children}</main>
       </body>
     </html>

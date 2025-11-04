@@ -31,7 +31,7 @@ export default function SignUpPage() {
   return (
     <main className={styles.main}>
       <Image
-        src="/IdentidadeVisual/ABsemfundo.png"
+        src="/IdentidadeVisual/ADAPTbrancosemfundo.png"
         alt="Logo Adapt"
         width={180}
         height={60}
@@ -71,6 +71,16 @@ export default function SignUpPage() {
           Já tem conta? <a href="/login">Faça login</a>
         </p>
       </div>
+
+      <footer className={styles.footer}>
+        <p>© 2025 Adapt, Inc.</p>
+        <nav>
+          <a href="#">Quem Somos?</a>
+          <a href="#">Parcerias</a>
+          <a href="#">Termos & Privacidade</a>
+        </nav>
+      </footer>
+      
     </main>
   );
 }

@@ -1,47 +1,50 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
+import styles from "./Header.module.css";
 import { useEffect, useState } from "react";
 
 export function Header() {
-  const [darkMode, setDarkMode] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    const saved = localStorage.getItem("darkMode") === "true";
-    setDarkMode(saved);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
-    const html = document.documentElement;
-    if (darkMode) html.classList.add("dark");
-    else html.classList.remove("dark");
-    localStorage.setItem("darkMode", darkMode ? "true" : "false");
-  }, [darkMode, mounted]);
-
-  if (!mounted) return null;
-
   return (
-    <header className="site-header">
-      <nav className="nav">
-        <h1 className="logo">Adapt</h1>
+    <header className={styles.header}>
+      <div className={styles.topStripe}></div>
 
-        <ul className="nav-list">
-          <li><Link href="/">Home</Link></li>
-          <li><Link href="/about">Sobre nós</Link></li>
-          <li><Link href="/features">Recursos</Link></li>
+      <nav className={styles.navbar}>
+        {/* === LOGO === */}
+        <div className={styles.logoContainer}>
+          <Image
+            src="/Identidade_Visual/adapt-logo.png"
+            alt="Adapt"
+            width={130}
+            height={45}
+            className={styles.logo}
+            priority
+          />
+        </div>
+
+        {/* === LINKS PRINCIPAIS === */}
+        <ul className={styles.navList}>
+          <li>
+            <Link href="/">Início</Link>
+          </li>
+          <li>
+            <Link href="/sobre">Sobre Nós</Link>
+          </li>
+          <li>
+            <Link href="/recursos">Recursos</Link>
+          </li>
         </ul>
 
-        <div className="right-side">
-          <Link href="/signup" className="btn signup-btn">
-            Criar conta
+        {/* === AÇÕES (LOGIN / CADASTRO) === */}
+        <div className={styles.rightSide}>
+          <Link href="/login" className={styles.btnOutline}>
+            Fazer Login
           </Link>
-          <Link href="/login" className="btn login-btn">
-            Fazer login
+          <Link href="/signup" className={styles.btnPrimary}>
+            Criar Conta
           </Link>
-
+          {/*
           <button
             className="theme-button"
             onClick={() => setDarkMode((s) => !s)}
@@ -49,8 +52,11 @@ export function Header() {
           >
             {darkMode ? "☀️" : "🌙"}
           </button>
+          */}
         </div>
       </nav>
+
+      <div className={styles.bottomStripe}></div>
     </header>
   );
 }

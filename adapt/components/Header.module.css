@@ -1,0 +1,117 @@
+/* === Barra principal === */
+.header {
+  width: 100%;
+  background-color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+/* Faixas laranja superior e inferior */
+.topStripe,
+.bottomStripe {
+  height: 10px;
+  background-color: #ff6a00;
+}
+
+/* Container de navegação */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 48px;
+  background: #fff;
+}
+
+/* Logo */
+.logoContainer {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: auto;
+  width: 120px;
+  object-fit: contain;
+}
+
+/* Lista de navegação */
+.navList {
+  list-style: none;
+  display: flex;
+  gap: 36px;
+}
+
+.navList a {
+  text-decoration: none;
+  color: #444;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: color 0.2s ease;
+}
+
+.navList a:hover {
+  color: #ff6a00;
+}
+
+/* Botões à direita */
+.rightSide {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Botão de contorno */
+.btnOutline {
+  border: 2px solid #ff6a00;
+  color: #ff6a00;
+  font-weight: 800;
+  padding: 8px 18px;
+  border-radius: 30px;
+  background-color: transparent;
+  transition: all 0.3s ease;
+}
+
+.btnOutline:hover {
+  background-color: #ff6a00;
+  color: #fff;
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(255, 106, 0, 0.4);
+}
+
+/* Botão laranja sólido */
+.btnPrimary {
+  background-color: #ff6a00;
+  border: 2px solid #ff6a00;
+  color: #fff;
+  font-weight: 800;
+  padding: 8px 18px;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+}
+
+.btnPrimary:hover {
+  background-color: #e25800;
+  border-color: #e25800;
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(255, 106, 0, 0.4);
+}
+
+/* Responsivo */
+@media (max-width: 900px) {
+  .navbar {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .navList {
+    gap: 18px;
+  }
+
+  .btnPrimary,
+  .btnOutline {
+    padding: 10px 24px;
+  }
+}
