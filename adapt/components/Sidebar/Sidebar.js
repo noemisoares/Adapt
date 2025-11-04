@@ -10,10 +10,12 @@ import {
   Lightbulb,
   MessageSquare,
   LogOut,
+  Menu,
+  X,
 } from "lucide-react";
 import styles from "./Sidebar.module.css";
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, setIsOpen }) {
   const pathname = usePathname();
   const [user, setUser] = useState(null);
 
@@ -56,9 +58,15 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className={styles.sidebar}>
+    <aside
+      className={`${styles.sidebar} ${isOpen ? styles.open : styles.closed}`}
+    >
+      <button className={styles.toggleBtn} onClick={() => setIsOpen(!isOpen)}>
+        {isOpen ? <X size={20} /> : <Menu size={20} />}
+      </button>
+
       <div className={styles["sidebar-logo"]}>
-        <h2>Adapt</h2>
+        <h2>{isOpen ? "Adapt" : "A"}</h2>
       </div>
 
       <nav className={styles["sidebar-links"]}>
@@ -71,7 +79,7 @@ export default function Sidebar() {
             }`}
           >
             {link.icon}
-            <span>{link.label}</span>
+            {isOpen && <span>{link.label}</span>}
           </Link>
         ))}
       </nav>
@@ -81,12 +89,12 @@ export default function Sidebar() {
           <div className={styles["user-avatar"]}>
             {user ? user.get("username").charAt(0).toUpperCase() : "?"}
           </div>
-          <span>{user ? user.get("username") : "Usuário"}</span>
+          {isOpen && <span>{user ? user.get("username") : "Usuário"}</span>}
         </div>
 
         <button onClick={handleLogout} className={styles["logout-button"]}>
           <LogOut size={18} />
-          <span>Sair</span>
+          {isOpen && <span>Sair</span>}
         </button>
       </div>
     </aside>
