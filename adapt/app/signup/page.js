@@ -69,7 +69,7 @@ export default function SignUpPage() {
           </button>
           {error && <p className={styles.error}>{error}</p>}
         </form>
-        <p className={styles.loginLink}>
+        <p className={styles.signUpLink}>
           Já tem conta? <a href="/login">Faça login</a>
         </p>
       </div>
