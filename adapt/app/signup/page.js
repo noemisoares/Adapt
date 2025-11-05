@@ -73,6 +73,7 @@ export default function SignUpPage() {
           <p className={styles.signUpLink}>
             Já tem conta? <a href="/login">Faça login</a>
           </p>
+          
         </div>
       </main>
       <Footer />
