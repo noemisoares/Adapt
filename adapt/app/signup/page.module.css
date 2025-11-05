@@ -40,7 +40,7 @@
 
 /* Card */
 .card {
-  background-color: #b94b1a;
+  background-color: var(--color-card);
   padding: 40px 50px;
   border-radius: 14px;
   width: 420px;
@@ -100,13 +100,13 @@
 }
 
 /* Link Criar Conta */
-.signupLink {
+.signUpLink {
   margin-top: 14px;
   font-size: 14px;
 }
 
-.signupLink a {
-  color: #fff;
+.signUpLink a {
+  color: #ffffff;
   font-weight: 700;
   text-decoration: underline;
 }

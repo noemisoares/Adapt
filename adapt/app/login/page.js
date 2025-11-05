@@ -27,51 +27,51 @@ export default function LoginPage() {
 
   return (
     <>
-    <main className={styles.main}>
-      <Image
-        src="/IdentidadeVisual/ADAPTbrancosemfundo.png"
-        alt="Logo Adapt"
-        width={180}
-        height={60}
-        className={styles.logo}
-        priority
-      />
+      <main className={styles.main}>
+        <Image
+          src="/IdentidadeVisual/ADAPTbrancosemfundo.png"
+          alt="Logo Adapt"
+          width={180}
+          height={60}
+          className={styles.logo}
+          priority
+        />
 
-      <div className={styles.card}>
-        <h1 className={styles.title}>Fazer Login</h1>
+        <div className={styles.card}>
+          <h1 className={styles.title}>Fazer Login</h1>
 
-        <form onSubmit={handleLogin} className={styles.form}>
-          <label>Nome de usuário</label>
-          <input
-            type="text"
-            placeholder="Digite seu nome de usuário"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
+          <form onSubmit={handleLogin} className={styles.form}>
+            <label>Nome de usuário</label>
+            <input
+              type="text"
+              placeholder="Digite seu nome de usuário"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
 
-          <label>Senha</label>
-          <input
-            type="password"
-            placeholder="Digite sua senha"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+            <label>Senha</label>
+            <input
+              type="password"
+              placeholder="Digite sua senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
 
-          <button type="submit" className={styles.submitBtn}>
-            Entrar
-          </button>
+            <button type="submit" className={styles.submitBtn}>
+              Entrar
+            </button>
 
-          {error && <p className={styles.error}>{error}</p>}
-        </form>
+            {error && <p className={styles.error}>{error}</p>}
+          </form>
 
-        <p className={styles.loginLink}>
-          Ainda não tem conta? <Link href="/signup">Crie agora</Link>
-        </p>
-      </div>     
-    </main>
-    <Footer />
+          <p className={styles.loginLink}>
+            Ainda não tem conta? <a href="/signup">Crie agora</a>
+          </p>
+        </div>
+      </main>
+      <Footer />
     </>
   );
 }

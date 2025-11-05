@@ -7,7 +7,7 @@
   background: linear-gradient(-45deg, #d76100, #ff7b0f, #ffc793, #ff7e15, #d76100);
   background-size: 400% 400%;
   animation: backgroundFade 15s ease infinite;
-  padding-top: 100px;
+  padding-top: 120px;
   width: 100%;
   height: 100vh;
 }
@@ -106,7 +106,7 @@
 }
 
 .loginLink a {
-  color: #fff;
+  color: #ffffff;
   font-weight: 700;
   text-decoration: underline;
 }
