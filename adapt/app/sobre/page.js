@@ -3,6 +3,7 @@
 import styles from "./page.module.css";
 import { Header } from "../../components/Header";
 import Image from "next/image";
+import { Footer } from "../../components/Footer/Footer";
 
 export default function Sobre() {
   return (
@@ -83,17 +84,7 @@ export default function Sobre() {
           </div>
         </div>
       </section>
-      {/* === FOOTER === */}
-      <footer className={styles.footer}>
-        <div className={styles.footerContent}>
-          <p>© 2025 Adapt, Inc.</p>
-          <nav>
-            <a href="#">Quem Somos?</a>
-            <a href="#">Parcerias</a>
-            <a href="#">Termos & Privacidade</a>
-          </nav>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 }

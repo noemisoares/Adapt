@@ -4,6 +4,7 @@ import Parse from "../back4app/parseConfig";
 import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 import Image from "next/image";
+import { Footer } from "../../components/Footer/Footer";
 
 export default function SignUpPage() {
   const [email, setEmail] = useState("");
@@ -29,6 +30,7 @@ export default function SignUpPage() {
   }
 
   return (
+    <>
     <main className={styles.main}>
       <Image
         src="/IdentidadeVisual/ADAPTbrancosemfundo.png"
@@ -71,16 +73,7 @@ export default function SignUpPage() {
           Já tem conta? <a href="/login">Faça login</a>
         </p>
       </div>
-
-      <footer className={styles.footer}>
-        <p>© 2025 Adapt, Inc.</p>
-        <nav>
-          <a href="#">Quem Somos?</a>
-          <a href="#">Parcerias</a>
-          <a href="#">Termos & Privacidade</a>
-        </nav>
-      </footer>
-      
     </main>
-  );
+     <Footer />
+     </>  );
 }

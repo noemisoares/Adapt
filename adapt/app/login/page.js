@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./page.module.css";
+import { Footer } from "../../components/Footer/Footer";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -25,8 +26,8 @@ export default function LoginPage() {
   }
 
   return (
+    <>
     <main className={styles.main}>
-      {/* Logo acima do card */}
       <Image
         src="/IdentidadeVisual/ADAPTbrancosemfundo.png"
         alt="Logo Adapt"
@@ -68,16 +69,9 @@ export default function LoginPage() {
         <p className={styles.loginLink}>
           Ainda não tem conta? <Link href="/signup">Crie agora</Link>
         </p>
-      </div>
-
-      <footer className={styles.footer}>
-        <p>© 2025 Adapt, Inc.</p>
-        <nav>
-          <a href="#">Quem Somos?</a>
-          <a href="#">Parcerias</a>
-          <a href="#">Termos & Privacidade</a>
-        </nav>
-      </footer>
+      </div>     
     </main>
+    <Footer />
+    </>
   );
 }

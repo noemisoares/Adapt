@@ -4,6 +4,7 @@ import { useState } from "react";
 import styles from "./page.module.css";
 import { Header } from "../components/Header";
 import Image from "next/image";
+import { Footer } from "../components/Footer/Footer";
 
 export default function Page() {
   const [openFAQ, setOpenFAQ] = useState(null);
@@ -134,18 +135,7 @@ export default function Page() {
           </div>
         </div>
       </section>
-
-      {/* === FOOTER === */}
-      <footer className={styles.footer}>
-        <div className={styles.footerContent}>
-          <p>© 2025 Adapt, Inc.</p>
-          <nav>
-            <a href="#">Quem Somos?</a>
-            <a href="#">Parcerias</a>
-            <a href="#">Termos & Privacidade</a>
-          </nav>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 }

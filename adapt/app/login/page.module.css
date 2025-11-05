@@ -106,25 +106,3 @@
   font-weight: 700;
   text-decoration: underline;
 }
-
-/* Footer */
-.footer {
-  width: 100%;
-  text-align: center;
-  padding: 20px 0;
-  color: #333;
-  background: #fff;
-  font-size: 14px;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.footer nav a {
-  color: #333;
-  text-decoration: none;
-  margin: 0 10px;
-  font-weight: 600;
-}
-
-.footer nav a:hover {
-  color: #ff6a00;
-}
