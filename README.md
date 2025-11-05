@@ -1,6 +1,6 @@
 # Adapt - Sistema de Adaptação de Provas para Neurodivergentes
 
-<img src="adapt/public/Identidade_Visual/ADAPT_L_sem fundo.png" alt="Identidade Visual do Projeto ADAPT" width="400">
+<img src="adapt/public/IdentidadeVisual/ADAPTlaranjasemfundo.png" alt="Identidade Visual do Projeto ADAPT" width="400">
 
 ## Projeto Integrador – UNICAP
 Ferramenta digital desenvolvida para auxiliar professores na adaptação de avaliações para alunos neurodivergentes, com foco inicial em TDAH.
@@ -99,5 +99,12 @@ O Adapt tem potencial para se tornar:
     </td>
     <td align="center">Edrey Miguel</td>
     <td align="center"><a href="https://github.com/Edrey123">@Edrey123</a></td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/addson18.png" width="100px" style="border-radius:50%;" alt="Addson Cardoso"/>
+    </td>
+    <td align="center">Addson Cardoso</td>
+    <td align="center"><a href="https://github.com/Edrey123">@addson18</a></td>
   </tr>
 </table>
