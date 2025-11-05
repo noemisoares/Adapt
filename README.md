@@ -1,4 +1,4 @@
-# Adapt - Sistema de Adaptação de Provas para Neurodivergentess
+# Adapt - Sistema de Adaptação de Provas para Neurodivergentes
 
 <img src="adapt/public/IdentidadeVisual/ADAPTlaranjasemfundo.png" alt="Identidade Visual do Projeto ADAPT" width="400">
 
