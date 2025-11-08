@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "cohere-ai": "^7.19.0",
     "file-type": "^21.0.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.3",

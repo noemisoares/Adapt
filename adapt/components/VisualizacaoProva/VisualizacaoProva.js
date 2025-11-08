@@ -16,7 +16,6 @@ export default function VisualizacaoProva({
   const renderQuestion = (q, i) => {
     const text = q.text || q;
 
-    // Converte **texto** para <strong>texto</strong> com estilo melhorado
     const htmlText = text.replace(
       /\*\*(.*?)\*\*/g,
       '<strong style="color: #1a73e8; font-weight: bold;">$1</strong>'

@@ -21,68 +21,57 @@ async function readFileFromFormData(req) {
 
 function extractTextFromPDF(buffer) {
   return new Promise((resolve, reject) => {
-    try {
-      const pdfParser = new PDFParser();
+    const pdfParser = new PDFParser();
 
-      pdfParser.on("pdfParser_dataError", (err) => {
-        console.error("❌ Erro no pdf2json:", err.parserError);
-        reject(new Error("Falha ao processar PDF"));
-      });
+    pdfParser.on("pdfParser_dataError", (err) => {
+      console.error("❌ Erro no pdf2json:", err.parserError);
+      reject(new Error("Falha ao processar PDF"));
+    });
 
-      pdfParser.on("pdfParser_dataReady", (pdfData) => {
-        try {
-          const text = pdfData.Pages.map(
-            (page) =>
-              page.Texts?.map((t) =>
-                decodeURIComponent(t.R?.map((r) => r.T || "").join(" ") || "")
-              ).join(" ") || ""
-          ).join("\n");
+    pdfParser.on("pdfParser_dataReady", (pdfData) => {
+      try {
+        // junta todo texto de todas as páginas
+        const text = pdfData.Pages.map((page) =>
+          page.Texts?.map((t) =>
+            decodeURIComponent(t.R?.map((r) => r.T || "").join(" ") || "")
+          ).join(" ")
+        )
+          .join("\n")
+          .replace(/\s{2,}/g, " ") // normaliza espaços
+          .trim();
 
-          console.log(`✅ PDF processado: ${pdfData.Pages.length} páginas`);
-          resolve(text);
-        } catch (parseError) {
-          reject(new Error("Erro ao extrair texto do PDF"));
-        }
-      });
+        console.log(`✅ PDF processado: ${pdfData.Pages.length} páginas`);
+        resolve(text);
+      } catch (parseError) {
+        reject(new Error("Erro ao extrair texto do PDF"));
+      }
+    });
 
-      pdfParser.parseBuffer(buffer);
-    } catch (err) {
-      reject(new Error("Erro no parser de PDF"));
-    }
+    pdfParser.parseBuffer(buffer);
   });
 }
 
-// FUNÇÃO MELHORADA PARA DETECTAR QUESTÕES
+// 🔍 Função robusta para extrair questões numeradas
 function extractQuestions(text) {
   console.log("🔍 Analisando texto para extrair questões...");
 
-  // Remove cabeçalhos comuns
   const cleanText = text
     .replace(/^.*?(Tempo:|Instruções:|Avaliação:).*?\n/gi, "")
-    .replace(/jsPDF.*?$/, "") // Remove rodapé do jsPDF
+    .replace(/jsPDF.*?$/, "")
     .trim();
 
-  // Divisão MELHORADA - apenas onde realmente começa uma questão
-  const questionSplit = cleanText.split(/(?=\d+[\)\.]\s+)/g);
+  // divide onde há número seguido de ) ou .
+  const questionSplit = cleanText.split(/(?=\d+\s*[\)\.]\s+)/g);
 
   const questions = questionSplit
     .map((q) => q.trim())
-    .filter((q) => {
-      // Filtra apenas questões válidas
-      return (
-        q.length > 10 &&
-        q.match(/^\d+[\)\.]\s+/) && // Começa com número seguido de ) ou .
-        !q.match(/^[^\)]*$/) && // Deve ter o fechamento de parêntese
-        q.length < 1000
-      ); // Não pode ser muito longo (provavelmente junção errada)
-    })
+    .filter((q) => q.match(/^\d+\s*[\)\.]/) && q.length > 10)
     .map((q, i) => ({
       id: `q${i + 1}`,
       text: q,
     }));
 
   console.log(`✅ ${questions.length} questões extraídas`);
-
   return questions;
 }
 
@@ -120,27 +109,23 @@ export async function POST(req) {
       );
     }
 
-    console.log(
-      "📝 Texto extraído (amostra):",
-      extractedText.substring(0, 300)
-    );
+    console.log("📝 Texto extraído (amostra):", extractedText.slice(0, 300));
 
-    // Extrai questões com a função melhorada
     const questions = extractQuestions(extractedText);
 
     if (questions.length === 0) {
-      console.log(
-        "⚠️ Nenhuma questão detectada. Texto completo:",
-        extractedText
-      );
+      console.warn("⚠️ Nenhuma questão detectada no formato esperado.");
       return NextResponse.json(
         { error: "Nenhuma questão detectada no formato esperado." },
         { status: 400 }
       );
     }
 
+    // 🔄 Aqui garantimos compatibilidade com /api/adapt
+    // mandando também o texto completo extraído
     return NextResponse.json({
       originalQuestions: questions,
+      fullText: extractedText, // 👈 usado no adapt depois
       debug: {
         textLength: extractedText.length,
         questionsFound: questions.length,
