@@ -26,6 +26,7 @@
     "pdfkit": "^0.17.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-markdown": "^10.1.0",
     "stream-buffers": "^3.0.3",
     "tesseract.js": "^6.0.1"
   },

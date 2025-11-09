@@ -7,7 +7,6 @@ export const runtime = "nodejs";
 async function readFileFromFormData(req) {
   const formData = await req.formData();
   const file = formData.get("file");
-
   if (!file) throw new Error("Nenhum arquivo recebido.");
 
   const arrayBuffer = await file.arrayBuffer();
@@ -15,7 +14,7 @@ async function readFileFromFormData(req) {
   return {
     buffer,
     fileName: file.name,
-    contentType: file.type || "application/octet-stream",
+    contentType: file.type || "application/pdf",
   };
 }
 
@@ -23,27 +22,20 @@ function extractTextFromPDF(buffer) {
   return new Promise((resolve, reject) => {
     const pdfParser = new PDFParser();
 
-    pdfParser.on("pdfParser_dataError", (err) => {
-      console.error("❌ Erro no pdf2json:", err.parserError);
-      reject(new Error("Falha ao processar PDF"));
-    });
-
+    pdfParser.on("pdfParser_dataError", (err) => reject(err.parserError));
     pdfParser.on("pdfParser_dataReady", (pdfData) => {
       try {
-        // junta todo texto de todas as páginas
         const text = pdfData.Pages.map((page) =>
           page.Texts?.map((t) =>
-            decodeURIComponent(t.R?.map((r) => r.T || "").join(" ") || "")
+            decodeURIComponent(t.R?.map((r) => r.T || "").join(" "))
           ).join(" ")
         )
           .join("\n")
-          .replace(/\s{2,}/g, " ") // normaliza espaços
+          .replace(/\s{2,}/g, " ")
           .trim();
-
-        console.log(`✅ PDF processado: ${pdfData.Pages.length} páginas`);
         resolve(text);
-      } catch (parseError) {
-        reject(new Error("Erro ao extrair texto do PDF"));
+      } catch {
+        reject(new Error("Erro ao extrair texto do PDF."));
       }
     });
 
@@ -51,16 +43,12 @@ function extractTextFromPDF(buffer) {
   });
 }
 
-// 🔍 Função robusta para extrair questões numeradas
 function extractQuestions(text) {
-  console.log("🔍 Analisando texto para extrair questões...");
-
   const cleanText = text
     .replace(/^.*?(Tempo:|Instruções:|Avaliação:).*?\n/gi, "")
     .replace(/jsPDF.*?$/, "")
     .trim();
 
-  // divide onde há número seguido de ) ou .
   const questionSplit = cleanText.split(/(?=\d+\s*[\)\.]\s+)/g);
 
   const questions = questionSplit
@@ -71,68 +59,51 @@ function extractQuestions(text) {
       text: q,
     }));
 
-  console.log(`✅ ${questions.length} questões extraídas`);
   return questions;
 }
 
 export async function POST(req) {
   try {
     const { buffer, fileName, contentType } = await readFileFromFormData(req);
-    console.log("📄 Processando arquivo:", fileName, "Tipo:", contentType);
 
     let extractedText = "";
 
     if (contentType.includes("pdf")) {
-      console.log("🔍 Extraindo texto do PDF com pdf2json...");
       extractedText = await extractTextFromPDF(buffer);
     } else if (
       contentType.includes("word") ||
       contentType.includes("officedocument")
     ) {
-      console.log("🔍 Extraindo texto do DOCX com mammoth...");
       const result = await mammoth.extractRawText({ buffer });
       extractedText = result.value;
     } else {
       return NextResponse.json(
-        { error: `Formato não suportado: ${contentType}. Use PDF ou DOCX.` },
+        { error: `Formato não suportado: ${contentType}.` },
         { status: 400 }
       );
     }
 
     if (!extractedText || extractedText.trim().length < 10) {
       return NextResponse.json(
-        {
-          error:
-            "Não foi possível extrair texto do arquivo. Pode estar vazio ou corrompido.",
-        },
+        { error: "Texto muito curto ou não foi possível extrair conteúdo." },
         { status: 400 }
       );
     }
-
-    console.log("📝 Texto extraído (amostra):", extractedText.slice(0, 300));
 
     const questions = extractQuestions(extractedText);
-
     if (questions.length === 0) {
-      console.warn("⚠️ Nenhuma questão detectada no formato esperado.");
       return NextResponse.json(
-        { error: "Nenhuma questão detectada no formato esperado." },
+        { error: "Nenhuma questão detectada." },
         { status: 400 }
       );
     }
 
-    // 🔄 Aqui garantimos compatibilidade com /api/adapt
-    // mandando também o texto completo extraído
     return NextResponse.json({
       originalQuestions: questions,
-      fullText: extractedText, // 👈 usado no adapt depois
-      debug: {
-        textLength: extractedText.length,
-        questionsFound: questions.length,
-      },
+      fullText: extractedText,
+      originalUrl: null, // ✅ deixado opcional pra uso futuro
     });
   } catch (err) {
-    console.error("❌ Erro ao processar arquivo:", err);
     return NextResponse.json(
       { error: "Erro interno: " + err.message },
       { status: 500 }
@@ -141,8 +112,5 @@ export async function POST(req) {
 }
 
 export async function GET() {
-  return NextResponse.json({
-    message: "API parse-file funcionando com pdf2json",
-    status: "operacional",
-  });
+  return NextResponse.json({ message: "API parse-file operacional" });
 }

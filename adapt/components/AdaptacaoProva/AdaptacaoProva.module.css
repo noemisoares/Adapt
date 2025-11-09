@@ -1,58 +1,117 @@
 .container {
-  background: #fff;
-  border-radius: 16px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
   padding: 24px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  margin-top: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .title {
-  font-size: 22px;
-  font-weight: 800;
-  color: #ff6a00;
-  margin-bottom: 16px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #d1d5db;
+  padding-bottom: 6px;
 }
 
 .list {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 1rem;
 }
 
 .card {
-  background: #fff8f3;
-  border: 1px solid #ffd3b5;
-  border-radius: 12px;
-  padding: 16px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .original {
-  color: #555;
-  font-size: 15px;
-  margin-bottom: 8px;
+  color: #374151;
+  font-size: 0.95rem;
+  background-color: #f3f4f6;
+  border-left: 4px solid #9ca3af;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+  white-space: pre-wrap;
 }
 
 .adaptada {
-  background: #fff;
-  border-left: 4px solid #ff6a00;
-  padding: 10px;
-  font-size: 15px;
-  color: #222;
+  background-color: #eef6ff;
+  border-left: 4px solid #3b82f6;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  font-size: 0.97rem;
+  color: #1e3a8a;
+  white-space: pre-wrap;
+}
+
+/* Formatação do markdown dentro do texto adaptado */
+.adaptada :global(p) {
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+.adaptada :global(b),
+.adaptada :global(strong) {
+  font-weight: 600;
+  color: #1e40af;
+}
+
+.adaptada :global(ul),
+.adaptada :global(ol) {
+  margin: 0.5rem 0 0.75rem 1.25rem;
+}
+
+.adaptada :global(li) {
+  margin-bottom: 0.25rem;
 }
 
 .loading {
-  color: #ff6a00;
-  font-weight: 600;
-  font-size: 15px;
+  color: #2563eb;
+  font-weight: 500;
+  background-color: #eff6ff;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #bfdbfe;
+  text-align: center;
 }
 
 .error {
-  color: red;
-  background: #ffe6e6;
-  padding: 10px;
-  border-radius: 8px;
+  color: #b91c1c;
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 0.75rem;
+  text-align: center;
 }
 
 .info {
-  color: #777;
-  font-style: italic;
+  color: #4b5563;
+  font-size: 0.95rem;
+  text-align: center;
+  padding: 1rem;
+  background-color: #f3f4f6;
+  border-radius: 6px;
+  border: 1px dashed #d1d5db;
+}
+
+/* Ajuste responsivo */
+@media (max-width: 640px) {
+  .container {
+    padding: 16px;
+  }
+
+  .card {
+    padding: 0.75rem;
+  }
+
+  .title {
+    font-size: 1.1rem;
+  }
 }

@@ -1,134 +1,144 @@
 import { NextResponse } from "next/server";
 import PDFDocument from "pdfkit";
 import fetch from "node-fetch";
-import mammoth from "mammoth";
 import streamBuffers from "stream-buffers";
 
-// Mesma importação do pdf-parse
+// fallback seguro para pdf-parse
 let pdfParse;
 try {
-  const pdfModule = await import("pdf-parse");
-  pdfParse = pdfModule.default;
-} catch (error) {
-  try {
-    const pdfModule = await import("pdf-parse/lib/pdf-parse.js");
-    pdfParse = pdfModule.default;
-  } catch (error2) {
-    if (typeof require !== "undefined") {
-      pdfParse = require("pdf-parse");
-    } else {
-      throw new Error("pdf-parse não pôde ser carregado");
-    }
-  }
+  const mod = await import("pdf-parse");
+  pdfParse = mod.default || mod;
+} catch (e) {
+  console.error("Erro ao importar pdf-parse:", e);
+  throw e;
 }
 
+// --- Helper: quebra por bold ---
+function tokenizeForBold(originalLine, adaptedLine) {
+  if (/\*\*(.+?)\*\*/.test(adaptedLine)) {
+    const parts = [];
+    let rest = adaptedLine;
+    const re = /\*\*(.+?)\*\*/;
+    while (re.test(rest)) {
+      const m = re.exec(rest);
+      const before = rest.slice(0, m.index);
+      if (before) parts.push({ text: before, bold: false });
+      parts.push({ text: m[1], bold: true });
+      rest = rest.slice(m.index + m[0].length);
+    }
+    if (rest) parts.push({ text: rest, bold: false });
+    return parts;
+  }
+
+  // fallback
+  const origWords = new Set(
+    (originalLine || "")
+      .toLowerCase()
+      .replace(/[^\w\sÀ-Úà-ú-]/g, "")
+      .split(/\s+/)
+  );
+  const words = adaptedLine.split(/(\s+)/);
+  return words.map((w) => {
+    const isSpace = /^\s+$/.test(w);
+    if (isSpace) return { text: w, bold: false };
+    const key = w.toLowerCase().replace(/[^\wÀ-Úà-ú-]/g, "");
+    const bold = key && !origWords.has(key) && key.length > 2;
+    return { text: w, bold };
+  });
+}
+
+// --- POST ---
 export async function POST(req) {
   try {
     const { originalUrl, adaptedQuestions } = await req.json();
 
     if (!originalUrl || !adaptedQuestions) {
       return NextResponse.json(
-        { error: "Parâmetros inválidos." },
+        { error: "originalUrl e adaptedQuestions são obrigatórios" },
         { status: 400 }
       );
     }
 
-    // 1️⃣ Baixa o arquivo original
-    const response = await fetch(originalUrl);
-    if (!response.ok) throw new Error("Falha ao baixar o arquivo original.");
+    const res = await fetch(originalUrl);
+    if (!res.ok) throw new Error("Falha ao baixar o arquivo original.");
+    const buffer = Buffer.from(await res.arrayBuffer());
 
-    const buffer = Buffer.from(await response.arrayBuffer());
-    let originalText = "";
-
-    // 2️⃣ Extrai texto
-    if (originalUrl.endsWith(".pdf")) {
-      const data = await pdfParse(buffer);
-      originalText = data.text;
-    } else if (originalUrl.endsWith(".docx")) {
-      const { value } = await mammoth.extractRawText({ buffer });
-      originalText = value;
-    } else {
-      return NextResponse.json(
-        { error: "Formato não suportado." },
-        { status: 400 }
-      );
+    const parsed = await pdfParse(buffer);
+    const text = parsed?.text || "";
+    if (!text || text.trim().length < 5) {
+      throw new Error("Não foi possível extrair texto do PDF original.");
     }
 
-    // 3️⃣ Divide em linhas e substitui APENAS questões
-    const lines = originalText.split(/\r?\n/);
+    const lines = text.split(/\r?\n/);
+    const isQuestionLine = (l) => /^\s*\d+\s*[\)\.]\s+/.test(l);
+
     let questionIndex = 0;
-
-    const adaptedLines = lines.map((line) => {
-      // Verifica se é uma questão
-      const isQuestion = line.match(/^\d+[\)\.]\s*.+/);
-
-      if (isQuestion && questionIndex < adaptedQuestions.length) {
+    const resultLines = lines.map((line) => {
+      if (isQuestionLine(line) && questionIndex < adaptedQuestions.length) {
         const adapted = adaptedQuestions[questionIndex];
         questionIndex++;
-        return adapted;
+        return { type: "question", original: line, adapted };
       }
-      return line; // Mantém tudo else intacto
+      return { type: "other", text: line };
     });
 
-    // 4️⃣ Gera novo PDF
-    const outputBuffer = new streamBuffers.WritableStreamBuffer();
-    const doc = new PDFDocument({
-      margin: 50,
-      size: "A4",
-    });
+    // --- Criação do PDF ---
+    const doc = new PDFDocument({ margin: 50, size: "A4" });
+    const outBuffer = new streamBuffers.WritableStreamBuffer();
+    doc.pipe(outBuffer);
 
-    doc.pipe(outputBuffer);
+    const normalFontSize = 13;
+    const questionFontSize = 14;
+    const lineGap = 8;
 
-    // Configurações TDAH
-    const fontSize = 14;
-    const lineHeight = 1.6;
+    function drawLine(parts, size) {
+      const startX = doc.x;
+      let x = startX;
+      const y = doc.y;
+      parts.forEach((p) => {
+        doc
+          .font(p.bold ? "Helvetica-Bold" : "Helvetica")
+          .fontSize(size)
+          .fillColor("black")
+          .text(p.text, x, y, { lineBreak: false });
+        const w = doc.widthOfString(p.text);
+        x += w;
+        doc.x = x;
+      });
+      doc.moveDown(0);
+      doc.x = startX;
+      doc.y = y + size + lineGap / 2;
+    }
 
-    // Reconstrói o PDF
-    for (const line of adaptedLines) {
-      if (line.trim() === "") {
-        doc.moveDown(0.5);
-        continue;
+    for (const item of resultLines) {
+      if (item.type === "other") {
+        doc.font("Helvetica").fontSize(normalFontSize).fillColor("black");
+        doc.text(item.text || "", { lineGap });
+      } else if (item.type === "question") {
+        const parts = tokenizeForBold(item.original, item.adapted);
+        drawLine(parts, questionFontSize);
       }
 
-      const isQuestion = line.match(/^\d+[\)\.]\s*.+/);
-
-      if (isQuestion) {
-        doc.moveDown(1);
-        doc
-          .font("Helvetica-Bold")
-          .fontSize(fontSize)
-          .text(line, {
-            align: "left",
-            lineGap: lineHeight * 2,
-          });
-      } else {
-        doc
-          .font("Helvetica")
-          .fontSize(fontSize)
-          .text(line, {
-            align: "left",
-            lineGap: lineHeight * 1.5,
-          });
+      if (doc.y > 720) {
+        doc.addPage();
+        doc.font("Helvetica").fontSize(normalFontSize);
       }
-
-      doc.moveDown(0.3);
     }
 
     doc.end();
-    await new Promise((resolve) => doc.on("end", resolve));
+    await new Promise((resolve) => doc.on("finish", resolve));
+    const pdfBuf = outBuffer.getContents();
 
-    const pdfBuffer = outputBuffer.getContents();
-
-    return new NextResponse(pdfBuffer, {
+    return new NextResponse(pdfBuf, {
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": "attachment; filename=prova_adaptada.pdf",
+        "Content-Disposition": 'attachment; filename="prova_adaptada.pdf"',
       },
     });
   } catch (err) {
-    console.error("Erro na geração de PDF:", err);
+    console.error("❌ Erro em /api/generate-pdf:", err);
     return NextResponse.json(
-      { error: err.message || "Erro ao gerar PDF adaptado." },
+      { error: err.message || String(err) },
       { status: 500 }
     );
   }

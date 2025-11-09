@@ -19,7 +19,7 @@ export default function UploadPage() {
   const [fileContent, setFileContent] = useState(null);
   const [error, setError] = useState(null);
 
-  // === Upload e parsing inicial do arquivo ===
+  // === UPLOAD E PARSE DO ARQUIVO ===
   const handleFileSelect = async (file) => {
     if (!file) return;
     setSelectedFile(file);
@@ -29,7 +29,6 @@ export default function UploadPage() {
     setAdaptedData(null);
 
     try {
-      // Lê conteúdo como base64
       const fileBuffer = await readFileAsArrayBuffer(file);
       const base64Content = arrayBufferToBase64(fileBuffer);
       setFileContent({
@@ -41,8 +40,6 @@ export default function UploadPage() {
       const formData = new FormData();
       formData.append("file", file);
 
-      // Envia para o parse inicial
-      console.log("📤 Enviando arquivo para parse...");
       const res = await fetch("/api/parse-file", {
         method: "POST",
         body: formData,
@@ -56,11 +53,9 @@ export default function UploadPage() {
 
       setOriginalQuestions(data.originalQuestions);
 
-      // Salva arquivo original no Back4App
-      console.log("💾 Salvando no Back4App...");
+      // Salva no Back4App
       const provaIdCriado = await uploadFile(file);
       setProvaId(provaIdCriado);
-      console.log("✅ Prova salva com ID:", provaIdCriado);
     } catch (err) {
       console.error("❌ Erro no upload:", err);
       setError(err.message);
@@ -85,7 +80,7 @@ export default function UploadPage() {
     return btoa(binary);
   };
 
-  // === Gera PDF adaptado ===
+  // === GERA PDF ADAPTADO ===
   const handleGenerateAdaptedPdf = useCallback(async () => {
     if (!provaId || !adaptedData) {
       alert("Nenhuma adaptação gerada ainda. Aguarde o processamento.");
@@ -105,13 +100,20 @@ export default function UploadPage() {
         return;
       }
 
-      console.log("📄 Gerando PDF adaptado...");
+      const adaptedQuestionsArray = adaptedData?.adaptedQuestions?.length
+        ? adaptedData.adaptedQuestions
+        : adaptedData?.questoes?.map((q) => q.adaptada) || [];
+
+      if (!adaptedQuestionsArray.length) {
+        throw new Error("Nenhuma questão adaptada encontrada para o PDF.");
+      }
+
       const res = await fetch("/api/generate-pdf", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           originalUrl,
-          adaptedQuestions: adaptedData.questoes.map((q) => q.adaptada),
+          adaptedQuestions: adaptedQuestionsArray,
         }),
       });
 
@@ -122,7 +124,6 @@ export default function UploadPage() {
         (selectedFile?.name || "prova_adaptada.pdf").replace(/\.[^/.]+$/, "") +
         "_adaptada.pdf";
 
-      // Salva no Back4App
       const parseFile = new Parse.File(safeName, blob);
       await parseFile.save();
 
@@ -130,7 +131,6 @@ export default function UploadPage() {
       provaObj.set("arquivoAdaptadoUrl", parseFile.url());
       await provaObj.save();
 
-      // Download local
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -139,7 +139,7 @@ export default function UploadPage() {
       a.remove();
       window.URL.revokeObjectURL(url);
 
-      alert("Prova adaptada gerada, salva e baixada com sucesso!");
+      alert("✅ Prova adaptada gerada e baixada com sucesso!");
     } catch (err) {
       console.error("Erro ao gerar PDF:", err);
       alert("Erro ao gerar prova adaptada: " + err.message);
@@ -194,6 +194,7 @@ export default function UploadPage() {
               <AdaptacaoProva
                 provaId={provaId}
                 fileContent={fileContent}
+                originalQuestions={originalQuestions}
                 onAdapted={setAdaptedData}
               />
 
