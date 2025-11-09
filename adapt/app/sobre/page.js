@@ -38,9 +38,11 @@ export default function Sobre() {
           {/* === CARDS === */}
           <div className={styles.features}>
             <div className={styles.card}>
-              <img
+              <Image
                 src="/IdentidadeVisual/icones/inclusao-missao.png"
                 alt="Ícone Inclusão com Missão"
+                width={100}
+                height={100}
               />
               <div className={styles.cardTitle}>INCLUSÃO COMO MISSÃO</div>
               <div className={styles.cardBody}>
@@ -50,9 +52,11 @@ export default function Sobre() {
             </div>
 
             <div className={styles.card}>
-              <img
+              <Image
                 src="/IdentidadeVisual/icones/tecnologia.png"
                 alt="Ícone Tecnologia"
+                width={100}
+                height={100}
               />
               <div className={styles.cardTitle}>
                 TECNOLOGIA A FAVOR DA EDUCAÇÃO
@@ -64,9 +68,11 @@ export default function Sobre() {
             </div>
 
             <div className={styles.card}>
-              <img
+              <Image
                 src="/IdentidadeVisual/icones/humano.png"
                 alt="Ícone Impacto Humano"
+                width={100}
+                height={100}
               />
               <div className={styles.cardTitle}>IMPACTO HUMANO</div>
               <div className={styles.cardBody}>

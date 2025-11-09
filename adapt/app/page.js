@@ -32,9 +32,11 @@ export default function Page() {
     <>
       <Header />
       <section className={styles.hero}>
-        <img
+        <Image
           src="/IdentidadeVisual/astronaut.png"
           alt="Astronauta"
+          width={200}
+          height={200}
           className={styles.astronaut}
         />
 
