@@ -19,8 +19,8 @@ export default function BoasPraticasPage() {
 
         <h1 className={styles.title}>Página em Desenvolvimento</h1>
         <p className={styles.text}>
-          Em breve, você encontrará aqui boas práticas e orientações para criar
-          provas adaptadas de forma eficiente e inclusiva. 🚀
+          Em breve, você encontrará aqui dicas e práticas recomendadas para
+          criar provas adaptadas com mais eficiência e inclusão. 💡
         </p>
       </div>
     </main>
