@@ -24,6 +24,7 @@
     "pdf2json": "^4.0.0",
     "pdfjs-dist": "^5.4.394",
     "pdfkit": "^0.17.2",
+    "pdfmake": "^0.2.20",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-markdown": "^10.1.0",
