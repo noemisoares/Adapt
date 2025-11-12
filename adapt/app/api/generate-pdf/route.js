@@ -180,13 +180,19 @@ export async function POST(req) {
     await new Promise((resolve) => writable.on("finish", resolve));
     const pdfBuffer = writable.getContents();
 
-    return new NextResponse(pdfBuffer, {
-      headers: {
-        "Content-Type": "application/pdf",
-        "Content-Disposition":
-          'attachment; filename="prova_adaptada_tdahtemplate.pdf"',
-      },
-    });
+    const stream = new ReadableStream({
+  start(controller) {
+    controller.enqueue(new Uint8Array(pdfBuffer));
+    controller.close();
+  },
+});
+
+return new NextResponse(stream, {
+  headers: {
+    "Content-Type": "application/pdf",
+    "Content-Disposition": 'attachment; filename="prova_adaptada_tdahtemplate.pdf"',
+  },
+});
   } catch (err) {
     console.error("❌ Erro em /api/generate-pdf:", err);
     return NextResponse.json(
