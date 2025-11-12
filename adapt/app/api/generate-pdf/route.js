@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import PdfPrinter from "pdfmake";
 import fetch from "node-fetch";
 import streamBuffers from "stream-buffers";
+import path from "path";
 
 export async function POST(req) {
   try {
@@ -123,8 +124,8 @@ export async function POST(req) {
     // 🖋️ Fontes básicas do pdfmake
     const fonts = {
       Roboto: {
-        normal: "node_modules/pdfmake/build/vfs_fonts.js",
-        bold: "node_modules/pdfmake/build/vfs_fonts.js",
+        normal: path.resolve("./node_modules/pdfmake/fonts/Roboto-Regular.ttf"),
+        bold: path.resolve("./node_modules/pdfmake/fonts/Roboto-Medium.ttf"),
       },
     };
 
