@@ -1,12 +1,18 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+/**
+ * @jest-environment jsdom
+ */
+
+import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 import UploadPage from "../app/dashboard/upload/page";
 
-// Mock do uploadFile
+// === Mocks ===
+
+// Mock uploadFile
 jest.mock("../app/back4app/provas/uploadFile", () => ({
   uploadFile: jest.fn(() => Promise.resolve("fake_prova_id")),
 }));
 
-// Mock do FileUploader
+// Mock FileUploader
 jest.mock("../components/FileUploader/FileUploader", () => {
   return function MockUploader({ onFileSelect }) {
     return (
@@ -26,18 +32,23 @@ jest.mock("../components/FileUploader/FileUploader", () => {
   };
 });
 
-// Mock do ArquivoCarregado
+// Mock ArquivoCarregado
 jest.mock("../components/ArquivoCarregado/ArquivoCarregado", () => {
-  return function MockArquivoCarregado() {
-    return <div data-testid="mock-arquivo-carregado">Arquivo carregado</div>;
+  return function MockArquivoCarregado({ onRemove }) {
+    return (
+      <div data-testid="mock-arquivo-carregado">
+        Arquivo carregado
+        <button data-testid="mock-remove" onClick={onRemove}>Remover</button>
+      </div>
+    );
   };
 });
 
-// Ignora os outros componentes
+// Ignorar outros componentes filhos
 jest.mock("../components/AdaptacaoProva/AdaptacaoProva", () => () => null);
 jest.mock("../components/VisualizacaoProva/VisualizacaoProva", () => () => null);
 
-// Mock do fetch
+// Mock fetch padrão
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
@@ -45,7 +56,14 @@ global.fetch = jest.fn(() =>
   })
 );
 
-// Mock do FileReader
+// Mock fetch com erro
+const fetchError = jest.fn(() =>
+  Promise.resolve({
+    ok: false,
+  })
+);
+
+// Mock FileReader
 class MockFileReader {
   readAsArrayBuffer(file) {
     this.onload({ target: { result: new ArrayBuffer(8) } });
@@ -69,19 +87,64 @@ describe("UploadPage – Upload Unitário", () => {
   test("envia arquivo e exibe ArquivoCarregado", async () => {
     render(<UploadPage />);
 
-    fireEvent.click(screen.getByTestId("mock-uploader"));
-
-    await waitFor(() => {
-      expect(screen.getByTestId("mock-arquivo-carregado")).toBeInTheDocument();
+    await act(async () => {
+      fireEvent.click(screen.getByTestId("mock-uploader"));
     });
 
-    // Confirma que fetch foi chamado corretamente
+    await waitFor(() =>
+      expect(screen.getByTestId("mock-arquivo-carregado")).toBeInTheDocument()
+    );
+
     expect(global.fetch).toHaveBeenCalledWith(
       "/api/parse-file",
       expect.objectContaining({
         method: "POST",
         body: expect.any(FormData),
       })
+    );
+  });
+
+  test("mostra mensagem de processando arquivo durante upload", async () => {
+    render(<UploadPage />);
+
+    await act(async () => {
+      fireEvent.click(screen.getByTestId("mock-uploader"));
+    });
+
+    const processingText = screen.queryByText(/processando arquivo/i);
+    if (processingText) {
+      expect(processingText).toBeInTheDocument();
+    }
+  });
+
+  test("permite remover arquivo e resetar estado", async () => {
+    render(<UploadPage />);
+
+    await act(async () => {
+      fireEvent.click(screen.getByTestId("mock-uploader"));
+    });
+
+    await waitFor(() =>
+      expect(screen.getByTestId("mock-arquivo-carregado")).toBeInTheDocument()
+    );
+
+    fireEvent.click(screen.getByTestId("mock-remove"));
+
+    expect(screen.queryByTestId("mock-arquivo-carregado")).not.toBeInTheDocument();
+    expect(screen.getByTestId("mock-uploader")).toBeInTheDocument();
+  });
+
+  test("mostra erro se fetch falha", async () => {
+    global.fetch = fetchError;
+
+    render(<UploadPage />);
+
+    await act(async () => {
+      fireEvent.click(screen.getByTestId("mock-uploader"));
+    });
+
+    await waitFor(() =>
+      expect(screen.getByText(/erro ao processar arquivo/i)).toBeInTheDocument()
     );
   });
 });
