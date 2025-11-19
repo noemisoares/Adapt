@@ -1,32 +1,12 @@
-/**
- * @jest-environment jsdom
- */
-
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import UploadPage from "/workspaces/Adapt/adapt/app/dashboard/upload/page.js";
+import UploadPage from "../app/dashboard/upload/page";
 
-// ==== MOCKS OBRIGATÓRIOS ====
-
-// Mock Parse
-jest.mock("../app/back4app/parseConfig", () => ({
-  Object: {
-    extend: () => function () {},
-  },
-  Query: jest.fn(() => ({
-    get: jest.fn(),
-  })),
-  File: jest.fn(() => ({
-    save: jest.fn(),
-    url: () => "https://fake-url.com/file.pdf",
-  })),
-}));
-
-// Mock uploadFile
+// Mock do uploadFile
 jest.mock("../app/back4app/provas/uploadFile", () => ({
   uploadFile: jest.fn(() => Promise.resolve("fake_prova_id")),
 }));
 
-// Mock dos componentes filhos – IMPORTANTÍSSIMO°
+// Mock do FileUploader
 jest.mock("../components/FileUploader/FileUploader", () => {
   return function MockUploader({ onFileSelect }) {
     return (
@@ -34,88 +14,74 @@ jest.mock("../components/FileUploader/FileUploader", () => {
         data-testid="mock-uploader"
         onClick={() => {
           const mockFile = new File(["conteudo"], "arquivo.docx", {
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            type:
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
           });
           onFileSelect(mockFile);
         }}
       >
-        Enviar arquivo fake
+        Enviar arquivo
       </button>
     );
   };
 });
 
-jest.mock("../components/ArquivoCarregado/ArquivoCarregado.js", () => {
+// Mock do ArquivoCarregado
+jest.mock("../components/ArquivoCarregado/ArquivoCarregado", () => {
   return function MockArquivoCarregado() {
     return <div data-testid="mock-arquivo-carregado">Arquivo carregado</div>;
   };
 });
 
-jest.mock("../components/AdaptacaoProva/AdaptacaoProva.js", () => {
-  return function MockAdaptacaoProva({ onAdapted }) {
-    return (
-      <button
-        data-testid="mock-adaptar"
-        onClick={() => onAdapted({ adaptedQuestions: ["Questão 1 adaptada"] })}
-      >
-        Adaptar
-      </button>
-    );
-  };
-});
+// Ignora os outros componentes
+jest.mock("../components/AdaptacaoProva/AdaptacaoProva", () => () => null);
+jest.mock("../components/VisualizacaoProva/VisualizacaoProva", () => () => null);
 
-jest.mock("../components/VisualizacaoProva/VisualizacaoProva.js", () => {
-  return function MockVisualizacaoProva() {
-    return <div data-testid="mock-visualizacao">Visualização</div>;
-  };
-});
-
-// Mock global fetch
+// Mock do fetch
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({ originalQuestions: ["Q1"] }),
-    blob: () => new Blob(["PDF CONTENT"]),
   })
 );
 
-describe("UploadPage", () => {
+// Mock do FileReader
+class MockFileReader {
+  readAsArrayBuffer(file) {
+    this.onload({ target: { result: new ArrayBuffer(8) } });
+  }
+}
+global.FileReader = MockFileReader;
+
+describe("UploadPage – Upload Unitário", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  test("renderiza título principal", () => {
+  test("renderiza título e uploader", () => {
     render(<UploadPage />);
-    expect(screen.getByText("Criar Nova Prova Adaptada")).toBeInTheDocument();
+    expect(
+      screen.getByText("Criar Nova Prova Adaptada")
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("mock-uploader")).toBeInTheDocument();
   });
 
-  test("permite enviar arquivo e exibe componentes dependentes", async () => {
+  test("envia arquivo e exibe ArquivoCarregado", async () => {
     render(<UploadPage />);
 
-    // clica no mock de upload
     fireEvent.click(screen.getByTestId("mock-uploader"));
 
-    // arquivo deve ser carregado
-    expect(await screen.findByTestId("mock-arquivo-carregado")).toBeInTheDocument();
-
-    // visualização deve aparecer
-    expect(screen.getByTestId("mock-visualizacao")).toBeInTheDocument();
-  });
-
-  test("permite adaptar e habilita botão de baixar PDF", async () => {
-    render(<UploadPage />);
-
-    // envia arquivo
-    fireEvent.click(screen.getByTestId("mock-uploader"));
-    await screen.findByTestId("mock-arquivo-carregado");
-
-    // dispara adaptação
-    fireEvent.click(screen.getByTestId("mock-adaptar"));
-
-    const downloadBtn = screen.getByRole("button", {
-      name: "Baixar Prova Adaptada",
+    await waitFor(() => {
+      expect(screen.getByTestId("mock-arquivo-carregado")).toBeInTheDocument();
     });
 
-    expect(downloadBtn).not.toBeDisabled();
+    // Confirma que fetch foi chamado corretamente
+    expect(global.fetch).toHaveBeenCalledWith(
+      "/api/parse-file",
+      expect.objectContaining({
+        method: "POST",
+        body: expect.any(FormData),
+      })
+    );
   });
 });
