@@ -1,5 +1,46 @@
 import { NextResponse } from "next/server";
 
+function parseBoldInline(line) {
+  const parts = line.split(/(\*\*[^*]+\*\*)/g).filter(Boolean);
+  return parts.map((part) => {
+    if (/^\*\*[^*]+\*\*$/.test(part)) {
+      return { text: part.slice(2, -2), bold: true };
+    }
+    return { text: part };
+  });
+}
+
+function parseMarkdownBlock(text = "") {
+  const lines = text.split("\n").filter(Boolean);
+  const result = [];
+
+  for (const line of lines) {
+    if (line.startsWith("# ")) {
+      result.push({
+        text: line.replace(/^#\s+/, "").trim(),
+        style: "mdH1",
+        margin: [0, 6, 0, 6],
+      });
+      continue;
+    }
+
+    if (line.startsWith("## ")) {
+      result.push({
+        text: line.replace(/^##\s+/, "").trim(),
+        style: "mdH2",
+        margin: [0, 4, 0, 4],
+      });
+      continue;
+    }
+
+    const inlineParts = parseBoldInline(line);
+    result.push({ text: inlineParts });
+  }
+
+  return result;
+}
+
+
 export async function POST(req) {
   try {
     // Import dinâmico do pdfMake (com fontes internas)
@@ -20,7 +61,6 @@ export async function POST(req) {
       );
     }
 
-    // 📄 Cabeçalho
     const cabecalho = [
       {
         text: "PROVA ADAPTADA PARA ESTUDANTES COM TDAH",
@@ -68,9 +108,12 @@ export async function POST(req) {
     ];
 
     // 🧩 Corpo da prova
+    // Mantive o bloco "Questão X" como você tinha. A única diferença:
+    // o conteúdo da questão (questao) agora é transformado por parseMarkdownBlock,
+    // e passado para o pdfMake como `stack` (sequência de blocos).
     const corpo = adaptedQuestions.flatMap((questao, i) => [
       { text: `Questão ${i + 1}`, style: "questionTitle" },
-      { text: questao, style: "questionBody", margin: [0, 4, 0, 12] },
+      { stack: parseMarkdownBlock(questao), style: "questionBody", margin: [0, 4, 0, 12] },
     ]);
 
     // 📄 Rodapé
@@ -82,7 +125,6 @@ export async function POST(req) {
       margin: [0, 10],
     });
 
-    // 🧾 Definição do PDF
     const docDefinition = {
       pageSize: "A4",
       pageMargins: [50, 60, 50, 60],
@@ -95,16 +137,16 @@ export async function POST(req) {
         instructions: { fontSize: 10, lineHeight: 1.4 },
         questionTitle: { fontSize: 11, bold: true, color: "#004488" },
         questionBody: { fontSize: 11, lineHeight: 1.6 },
+        mdH1: { fontSize: 13, bold: true, color: "#002244" },
+        mdH2: { fontSize: 12, bold: true, color: "#003355" },
       },
     };
 
-    // 🔹 Gera PDF (sem precisar de fontes externas)
     const pdfDocGenerator = pdfMake.createPdf(docDefinition);
     const pdfBuffer = await new Promise((resolve) =>
       pdfDocGenerator.getBuffer((buffer) => resolve(buffer))
     );
 
-    // 🚀 Retorna PDF
     return new NextResponse(pdfBuffer, {
       headers: {
         "Content-Type": "application/pdf",
