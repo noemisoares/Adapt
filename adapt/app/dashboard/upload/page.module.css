@@ -1,94 +1,106 @@
 .container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 3rem 2rem;
+  background: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  min-height: 100vh;
-  padding: 3rem 1rem;
-  background: #f5f7fa;
   font-family: "Inter", sans-serif;
 }
 
 .title {
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.description {
-  font-size: 1rem;
-  color: #475569;
-  text-align: center;
-  max-width: 600px;
-  line-height: 1.6;
+  color: #f97316;
   margin-bottom: 2rem;
+  text-align: center;
 }
 
-.fileSection {
-  background: white;
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
   width: 100%;
-  max-width: 600px;
+  max-width: 1300px;
+  margin: 0 auto; /* Centraliza */
+}
+
+.uploadArea {
+  background: #fff;
+  padding: 2.5rem;
+  border-radius: 1.2rem;
+  border: 2px dashed #fb923c;
+  color: #f97316;
   text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.uploadArea:hover {
+  border-color: #f97316;
+  background: #fff7ed;
+  transform: scale(1.02);
+}
+
+.loadingText {
+  margin-top: 1rem;
+  color: #ea580c;
+  font-weight: 600;
+}
+
+/* Mantém os cards bonitos abaixo */
+.right > * {
+  background: #ffffff;
+  padding: 1.7rem;
+  border-radius: 1rem;
+  border: 1px solid #ffe2cc;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  margin-bottom: 1.5rem;
+  margin-top: 2px;
+}
+
+.btnPrimary {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background: #f97316;
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.fileSection:hover {
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
-}
-
-.button {
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 0.9rem 1.5rem;
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-
-.button:hover {
-  background: #1e40af;
+.btnPrimary:hover {
+  background: #ea580c;
   transform: scale(1.03);
 }
 
-.button:disabled {
-  background: #94a3b8;
+.btnPrimary:disabled {
+  background: #fcd9b6;
   cursor: not-allowed;
   transform: none;
 }
 
-.resultSection {
-  width: 100%;
-  max-width: 800px;
-  margin-top: 3rem;
-  background: white;
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+.actionsBottom {
+  margin-top: 2rem;
 }
 
-.loading {
-  color: #2563eb;
+.error {
+  background: #fee2e2;
+  padding: 0.8rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
   font-weight: 600;
-  margin-top: 1.5rem;
-  animation: pulse 1.5s infinite;
+  margin-bottom: 1.5rem;
 }
 
-@keyframes pulse {
-  0% {
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.4;
+@media (max-width: 980px) {
+  .title {
+    font-size: 1.9rem;
   }
 }

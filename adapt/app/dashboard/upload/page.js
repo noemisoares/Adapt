@@ -164,7 +164,6 @@ export default function UploadPage() {
       {error && <div className={styles.error}>❌ {error}</div>}
 
       <div className={styles.grid}>
-        {/* Lado esquerdo - Upload */}
         <div className={styles.left}>
           {!selectedFile ? (
             <div className={styles.uploadArea}>

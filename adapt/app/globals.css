@@ -1,8 +1,13 @@
-body {
-  font-family: sans-serif;
+html, body {
+  height: 100%;
 }
 
-/* RESET GLOBAL */
+body {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0;
+  font-family: sans-serif;
+}
 
 * {
   margin: 0;
