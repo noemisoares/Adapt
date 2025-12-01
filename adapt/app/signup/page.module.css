@@ -2,14 +2,17 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  /* alinhar itens ao topo para manter o card próximo ao topo da página */
+  justify-content: flex-start;
   min-height: 100vh;
   background: linear-gradient(-45deg, #d76100, #ff7b0f, #ffc793, #ff7e15, #d76100);
   background-size: 400% 400%;
   animation: backgroundFade 15s ease infinite;
-  padding-top: 120px;
+  /* ajustar espaçamento superior — descer o card apenas mais um pouco */
+  padding-top: 60px;
   width: 100%;
-  height: 100vh;
+  /* evita overflow com footer fixo: altura mínima considera o footer */
+  min-height: calc(100vh - var(--footer-height));
 }
 
 /* Anima gradualmente o gradiente */
@@ -35,7 +38,8 @@
 .logo {
   height: auto;
   width: 350px;
-  margin: -60px auto 40px auto;
+  /* ajuste leve no logo para ficar consistente com o novo espaçamento */
+  margin: -40px auto 28px auto;
 }
 
 /* Card */
@@ -47,7 +51,8 @@
   color: #fff;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
   text-align: center;
-  margin-bottom: 60px;
+  /* margem inferior levemente maior para equilibrar o deslocamento */
+  margin-bottom: 36px;
 }
 
 .title {

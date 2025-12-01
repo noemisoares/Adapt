@@ -21,6 +21,7 @@ body {
   --color-accent: #cc4700; /* botões secundários */
   --color-border: #dddddd; /* bordas sutis */
   --color-card: #b94b1a; /* cor do card*/
+  --footer-height: 72px;
 }
 
 /* TEMA 02 - Modo Escuro */
@@ -42,6 +43,11 @@ body {
   background: var(--color-bg);
   color: var(--color-text);
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* garante espaço para o footer fixo (visível o tempo todo) */
+body {
+  padding-bottom: var(--footer-height);
 }
 
 a {
