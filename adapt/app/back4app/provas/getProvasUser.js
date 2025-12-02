@@ -7,8 +7,13 @@ export async function getProvasUser({ limit = 50, order = "-createdAt" } = {}) {
   const Prova = Parse.Object.extend("Provas");
   const query = new Parse.Query(Prova);
   query.equalTo("usuario", user);
+
+  query.exists("arquivoAdaptado")
+
   query.limit(limit);
-  query.descending(order === "-createdAt" ? "createdAt" : undefined);
+  if (order === "-createdAt") query.descending("createdAt");
+
+  //query.descending(order === "-createdAt" ? "createdAt" : undefined);
 
   const results = await query.find();
 
@@ -16,7 +21,12 @@ export async function getProvasUser({ limit = 50, order = "-createdAt" } = {}) {
     id: p.id,
     titulo: p.get("titulo") || null,
     criadoEm: p.createdAt,
+
+    arquivoAdaptadoUrl: p.get("arquivoAdaptado")?.url() || null,
+    arquivoAdaptadoUrl: p.get("arquivoAdaptado")?.url() || null,
+    adaptedText: p.get("adaptedText") || null,
+
     arquivoUrl: p.get("arquivoOriginal")?.url() || null,
-    arquivoName: p.get("arquivoOriginal")?.name() || null,
+    //arquivoName: p.get("arquivoOriginal")?.name() || null,
   }));
 }

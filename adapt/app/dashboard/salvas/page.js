@@ -16,7 +16,11 @@ export default function SalvasPage() {
     (async () => {
       try {
         const res = await getProvasUser({ limit: 100, order: "-createdAt" });
-        if (mounted) setProvas(res);
+
+        const adaptadas = res.filter((p) => p.arquivoAdaptadoUrl); //new
+        if (mounted) setProvas(adaptadas); //new
+
+        //if (mounted) setProvas(res);
       } catch (err) {
         console.error("Erro buscando provas:", err);
         if (mounted) setError(err.message || "Erro desconhecido");
@@ -137,11 +141,17 @@ export default function SalvasPage() {
                   : "Data não disponível"}
               </p>
 
+              <p className={styles.cardId}>
+              <strong>ID:</strong> {p.id}
+              </p>
+              
+
               <div className={styles.cardActions}>
                 {p.arquivoUrl ? (
                   <>
                     <a
-                      href={p.arquivoUrl}
+                      //href={p.arquivoUrl}
+                      href={p.arquivoAdaptadoUrl} //
                       target="_blank"
                       rel="noopener noreferrer"
                       className={styles.openBtn}
@@ -149,7 +159,8 @@ export default function SalvasPage() {
                       Abrir
                     </a>
                     <a
-                      href={p.arquivoUrl}
+                      //href={p.arquivoUrl}
+                      href={p.arquivoAdaptadoUrl} //
                       download
                       className={styles.downloadBtn}
                     >

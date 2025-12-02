@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { CohereClient } from "cohere-ai";
 import PDFParser from "pdf2json";
 
+import Parse from "@/app/back4app/parseConfig"; //
+
 const cohere = new CohereClient({
   token: process.env.COHERE_API_KEY,
 });
@@ -117,6 +119,39 @@ ${extractedText}
     };
 
     console.log("✅ Adaptação concluída com sucesso!");
+
+    //
+    try {
+      // ID da prova enviado pelo frontend
+      const { provaId } = body;
+
+      if (provaId) {
+        const Prova = Parse.Object.extend("Provas");
+        const query = new Parse.Query(Prova);
+
+        const prova = await query.get(provaId);
+
+        // Salvar o texto adaptado como arquivo .txt (ou .md)
+        const adaptedFile = new Parse.File("prova_adaptada.txt", {
+          base64: Buffer.from(adaptedText).toString("base64"),
+        });
+
+        await adaptedFile.save();
+
+        // Atualizar o objeto Prova
+        prova.set("arquivoAdaptado", adaptedFile);
+        prova.set("arquivoAdaptadoUrl", adaptedFile.url());
+        prova.set("adaptedText", adaptedText);
+
+        await prova.save();
+
+        console.log("📌 Prova adaptada salva com sucesso no Back4App!");
+      }
+    } catch (e) {
+      console.error("Erro ao salvar prova adaptada:", e);
+    }
+    //
+
     return NextResponse.json({ adapted });
   } catch (error) {
     console.error("❌ Erro no /api/adapt:", error);
