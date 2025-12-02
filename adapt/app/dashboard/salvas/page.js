@@ -144,7 +144,7 @@ export default function SalvasPage() {
               <p className={styles.cardId}>
               <strong>ID:</strong> {p.id}
               </p>
-              
+
 
               <div className={styles.cardActions}>
                 {p.arquivoUrl ? (

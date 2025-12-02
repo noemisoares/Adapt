@@ -8,7 +8,7 @@ export async function getProvasUser({ limit = 50, order = "-createdAt" } = {}) {
   const query = new Parse.Query(Prova);
   query.equalTo("usuario", user);
 
-  query.exists("arquivoAdaptadoURL") //
+  // query.exists("arquivoAdaptadoURL") //
 
   query.limit(limit);
   if (order === "-createdAt") query.descending("createdAt");
