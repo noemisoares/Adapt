@@ -120,7 +120,7 @@ ${extractedText}
 
     console.log("✅ Adaptação concluída com sucesso!");
 
-    //
+    /*
     try {
       // ID da prova enviado pelo frontend
       const { provaId } = body;
@@ -149,8 +149,8 @@ ${extractedText}
       }
     } catch (e) {
       console.error("Erro ao salvar prova adaptada:", e);
-    }
-    //
+    } 
+    */
 
     return NextResponse.json({ adapted });
   } catch (error) {

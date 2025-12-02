@@ -141,12 +141,13 @@ export default function SalvasPage() {
                   : "Data não disponível"}
               </p>
 
+
               <div className={styles.cardActions}>
                 {p.arquivoUrl ? (
                   <>
                     <a
-                      //href={p.arquivoUrl}
-                      href={p.arquivoAdaptadoUrl} //
+                      href={p.arquivoUrl}
+                      //href={p.arquivoAdaptadoUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className={styles.openBtn}
@@ -154,8 +155,8 @@ export default function SalvasPage() {
                       Abrir
                     </a>
                     <a
-                      //href={p.arquivoUrl}
-                      href={p.arquivoAdaptadoUrl} //
+                      href={p.arquivoUrl}
+                      //href={p.arquivoAdaptadoUrl}
                       download
                       className={styles.downloadBtn}
                     >
