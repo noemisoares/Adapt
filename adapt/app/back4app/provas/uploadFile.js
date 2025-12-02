@@ -19,6 +19,7 @@ export async function uploadFile(file) {
     const Prova = Parse.Object.extend("Provas");
     const prova = new Prova();
 
+    prova.set("titulo", safeFileName);
     prova.set("arquivoOriginal", savedFile);
     prova.set("arquivoOriginalUrl", savedFile.url());
     prova.set("usuario", Parse.User.current());
