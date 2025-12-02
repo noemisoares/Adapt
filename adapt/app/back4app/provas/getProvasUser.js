@@ -14,7 +14,7 @@ export async function getProvasUser({ limit = 50, order = "-createdAt" } = {}) {
 
   return results.map(p => ({
     id: p.id,
-    titulo: p.get("title") || null,
+    titulo: p.get("titulo") || null,
     criadoEm: p.createdAt,
     arquivoUrl: p.get("arquivoOriginal")?.url() || null,
     arquivoName: p.get("arquivoOriginal")?.name() || null,
