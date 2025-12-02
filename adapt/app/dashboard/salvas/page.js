@@ -141,9 +141,6 @@ export default function SalvasPage() {
                   : "Data não disponível"}
               </p>
 
-              <p className={styles.cardId}>
-              <strong>ID:</strong> {p.id}
-              </p>
               
 
               <div className={styles.cardActions}>
