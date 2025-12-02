@@ -22,13 +22,15 @@ export async function getProvasUser({ limit = 50, order = "-createdAt" } = {}) {
     titulo: p.get("titulo") || null,
     criadoEm: p.createdAt,
 
+    arquivoUrl: p.get("arquivoOriginal")?.url() || null,
+
     arquivoAdaptadoUrl: p.get("arquivoAdaptadoURL") || null, //
 
     //arquivoAdaptadoUrl: p.get("arquivoAdaptadoURL")?.url() || null, //
     //arquivoAdaptadoName: p.get("arquivoAdaptadoURL")?.name() || null, //
     adaptedText: p.get("adaptedText") || null,
 
-    arquivoUrl: p.get("arquivoOriginal")?.url() || null,
+    //arquivoUrl: p.get("arquivoOriginal")?.url() || null,
     //arquivoName: p.get("arquivoOriginal")?.name() || null,
   }));
 }
