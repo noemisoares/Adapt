@@ -32,6 +32,7 @@ export async function gerarPDFAdaptado({
     body: JSON.stringify({
       originalUrl,
       adaptedQuestions: adaptedQuestionsArray,
+      instrucoesOriginais: adaptedData?.instrucoesOriginais || "",
     }),
   });
 

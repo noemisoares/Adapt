@@ -114,6 +114,7 @@ export default function UploadPage() {
         body: JSON.stringify({
           originalUrl,
           adaptedQuestions: adaptedQuestionsArray,
+          instrucoesOriginais: adaptedData?.instrucoesOriginais || "",
         }),
       });
 

@@ -85,7 +85,8 @@ Adapte APENAS os ENUNCIADOS das questões. Siga as regras:
 - NÃO altere o texto base nem as alternativas.
 - Mantenha numeração e estrutura das questões.
 - Use espaçamento e quebras de linha para melhor leitura.
-- Retorne apenas o texto adaptado, em formato Markdown.
+- IMPORTANTE: Mantenha as instruções originais da prova no início do texto adaptado.
+- Retorne o texto adaptado em formato Markdown.
 
 Prova original:
 ${extractedText}
@@ -104,10 +105,42 @@ ${extractedText}
     }
 
     // ---- Quebra automática das questões adaptadas ----
-    const adaptedQuestions = adaptedText
-      .split(/\n(?=\d+\s*[\.\)])/) // quebra por numeração
+    // Encontra onde começam as questões - procura por:
+    // 1) Padrão "1)" ou "1." (numeração com ponto/parêntese)
+    // 2) Padrão "## Questão" (header markdown para questão)
+    const questionsMatch = adaptedText.match(/(?:^|\n)((?:\d+\s*[\.\)])|(?:##\s+[qQ]uestão))/m);
+    const questionsStartIndex = questionsMatch 
+      ? adaptedText.indexOf(questionsMatch[0])
+      : -1;
+    
+    console.log("DEBUG - questionsMatch:", questionsMatch ? questionsMatch[0] : "não encontrado");
+    console.log("DEBUG - questionsStartIndex:", questionsStartIndex);
+    
+    // Extrai as instruções (tudo antes das questões)
+    let instrucoesOriginais = "";
+    let questionsText = adaptedText;
+    
+    if (questionsStartIndex !== -1) {
+      // Se a questão começar com \n, pega tudo antes dele
+      if (adaptedText[questionsStartIndex] === "\n") {
+        instrucoesOriginais = adaptedText.substring(0, questionsStartIndex).trim();
+        questionsText = adaptedText.substring(questionsStartIndex + 1);
+      } else {
+        // Se começar direto com número/header (sem \n), pega tudo antes
+        instrucoesOriginais = adaptedText.substring(0, questionsStartIndex).trim();
+        questionsText = adaptedText.substring(questionsStartIndex);
+      }
+    }
+    
+    // Quebra as questões - agora também detecta "## Questão"
+    const adaptedQuestions = questionsText
+      .split(/\n(?=(?:\d+\s*[\.\)]|##\s+[qQ]uestão))/) // quebra por numeração OU "## Questão"
       .map((q) => q.trim())
       .filter(Boolean);
+
+    console.log("DEBUG - instrucoesOriginais:", instrucoesOriginais.substring(0, 300));
+    console.log("DEBUG - adaptedQuestions[0]:", adaptedQuestions[0]?.substring(0, 300));
+    console.log("DEBUG - adaptedQuestions length:", adaptedQuestions.length);
 
     const adapted = {
       questoes: adaptedQuestions.map((adaptada, i) => ({
@@ -115,6 +148,7 @@ ${extractedText}
         adaptada,
       })),
       adaptedQuestions,
+      instrucoesOriginais,
       adaptedText,
     };
 

@@ -37,30 +37,15 @@ export default function AdaptacaoProva({
 
         const adaptedResp = data?.adapted || data;
 
-        const adaptedArr =
-          adaptedResp?.adaptedQuestions ||
-          (adaptedResp?.adaptedText
-            ? adaptedResp.adaptedText
-                .split(/\n{1,2}(?=\d+\s*[\.\)])/) // tenta quebrar por novas linhas antes de número
-                .map((s) => s.trim())
-                .filter(Boolean)
-            : null) ||
-          null;
+        // 🔹 Extrai as instruções ANTES das questões
+        const instrucoesOriginais = adaptedResp?.instrucoesOriginais || "";
 
-        if (!adaptedArr || !Array.isArray(adaptedArr) || adaptedArr.length === 0) {
+        // 🔹 Pega apenas as questões (com numeração)
+        const adaptedQuestionsOnly = adaptedResp?.adaptedQuestions || [];
+
+        if (!adaptedQuestionsOnly || !Array.isArray(adaptedQuestionsOnly) || adaptedQuestionsOnly.length === 0) {
           throw new Error("Nenhum enunciado adaptado retornado pela IA.");
         }
-
-        // 🔹 Detecta se o primeiro bloco é cabeçalho (não começa com número)
-        let cabecalho = null;
-        if (adaptedArr.length > 0 && !/^\s*\d+[\.\)]/.test(adaptedArr[0])) {
-          cabecalho = adaptedArr[0];
-        }
-
-        // 🔹 Filtra apenas os blocos que parecem questões (começam com número)
-        const adaptedQuestionsOnly = adaptedArr.filter((bloco) =>
-          /^\d+[\.\)]/.test(bloco.trim())
-        );
 
         const questoes = adaptedQuestionsOnly.map((adaptada, i) => {
           const originalObj = originalQuestions?.[i];
@@ -76,9 +61,9 @@ export default function AdaptacaoProva({
         });
 
         const adapted = {
-          cabecalho,
-          adaptedQuestions: adaptedArr,
+          adaptedQuestions: adaptedQuestionsOnly,
           questoes,
+          instrucoesOriginais,
         };
 
         setAdaptedData(adapted);

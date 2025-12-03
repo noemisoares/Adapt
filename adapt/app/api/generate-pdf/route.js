@@ -53,6 +53,33 @@ function parseMarkdownBlock(text = "") {
   return result;
 }
 
+/* -------- PARSER PARA QUESTÕES (sem interpretação de # como header) -------- */
+
+function parseQuestionBlock(text = "") {
+  if (!text.trim()) return [];
+
+  const lines = text.split("\n");
+  const result = [];
+
+  for (const line of lines) {
+    if (!line.trim()) continue;
+
+    // Para questões, apenas interpretamos listas, não headers
+    if (line.startsWith("- ") || line.startsWith("* ")) {
+      result.push({
+        ul: [line.replace(/^[-*]\s*/, "").trim()],
+        style: "mdList",
+      });
+      continue;
+    }
+
+    // Texto normal com suporte a negrito
+    result.push({ text: parseBoldInline(line), margin: [0, 2] });
+  }
+
+  return result;
+}
+
 /* ---------------------------- GERADOR PDF ---------------------------- */
 
 export async function POST(req) {
@@ -123,7 +150,9 @@ export async function POST(req) {
     /* ------------------ INSTRUÇÕES ------------------ */
     const instructionsBlock = [
       { text: "INSTRUÇÕES DA PROVA:", style: "sectionTitle", margin: [0, 0, 0, 6] },
-      { stack: parseMarkdownBlock(instrucoesOriginais), style: "instructionText" },
+      instrucoesOriginais.trim() 
+        ? { stack: parseMarkdownBlock(instrucoesOriginais), style: "instructionText" }
+        : { text: "[Nenhuma instrução fornecida]", style: "instructionText", color: "#999" },
       { text: "", margin: [0, 10] },
       { canvas: [{ type: "line", x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 0.8 }] },
       { text: "", margin: [0, 14] },
@@ -143,7 +172,6 @@ export async function POST(req) {
           style: "questionBody",
           margin: [0, 2, 0, 12],
         },
-
       ];
     });
 
