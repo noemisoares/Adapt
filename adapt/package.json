@@ -16,7 +16,7 @@
     "jspdf": "^3.0.3",
     "lucide-react": "^0.545.0",
     "mammoth": "^1.11.0",
-    "next": "15.5.4",
+    "next": "15.5.9",
     "node-fetch": "^3.3.2",
     "openai": "^6.7.0",
     "parse": "^6.1.1",
